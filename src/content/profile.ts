@@ -58,7 +58,7 @@ export const profile = {
   firstName: "Juan",
   lastName: "Botha",
   title: "Lead Backend Engineer",
-  location: "Knysna, Western Cape, ZA",
+  location: "Plettenberg Bay, Western Cape, ZA",
   timezone: "Africa/Johannesburg",
   available: true,
   availability: "Open to select opportunities",
@@ -101,7 +101,7 @@ export const experience: Role[] = [
     links: [{ label: "Alpha7x", href: "https://alpha7x.com" }],
     start: "Jun 2026",
     end: "Present",
-    location: "Knysna, ZA",
+    location: "Plettenberg Bay, ZA",
     blurb: "Trust infrastructure for mortgage assets.",
     highlights: [
       "Leading the rebuild of a legacy .NET backend as TypeScript services on Fastify, with Zod-typed contracts and generated OpenAPI documentation.",

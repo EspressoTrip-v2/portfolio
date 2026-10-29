@@ -52,7 +52,7 @@ export function About() {
               <span className="size-2.5 rounded-full bg-line-strong" />
               <span className="size-2.5 rounded-full bg-line-strong" />
               <span className="size-2.5 rounded-full bg-acid" />
-              <span className="ml-3 font-mono text-[11px] text-dim">juan@knysna: ~</span>
+              <span className="ml-3 font-mono text-[11px] text-dim">juan@plett: ~</span>
             </div>
             <pre className="overflow-x-auto p-5 font-mono text-[11.5px] leading-7 sm:p-7 sm:text-[13px]">
               <code>
