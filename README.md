@@ -28,12 +28,12 @@ The site is fully static: every route, including the share images, `robots.txt` 
 
 | Environment | URL used | Indexed by search engines |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` set | That value | Yes |
+| `SITE_URL` set | That value | Yes |
 | Vercel production | `https://<production domain>` (`VERCEL_PROJECT_PRODUCTION_URL`) | Yes |
 | Vercel preview | `https://<deployment URL>` (`VERCEL_URL`) | No |
 | Local | `http://localhost:3030` | No |
 
-After adding a custom domain, either make it the production domain in Vercel or set `NEXT_PUBLIC_SITE_URL` (for example `https://juanbotha.dev`) in the project's environment variables, then redeploy.
+After adding a custom domain, either make it the production domain in Vercel or set `SITE_URL` (for example `https://juanbotha.dev`) in the project's environment variables, then redeploy.
 
 **Headers.** `next.config.ts` adds `nosniff`, `DENY` framing, a strict referrer policy and a restrictive permissions policy to every response. Vercel adds HSTS itself.
 
