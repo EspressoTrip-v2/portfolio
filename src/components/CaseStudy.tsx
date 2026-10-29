@@ -65,7 +65,7 @@ export function CaseStudy() {
           </ul>
           <a
             href={profile.links.email.href}
-            className="group inline-flex shrink-0 items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-muted transition-colors hover:text-acid"
+            className="group inline-flex shrink-0 items-center gap-2 py-2 font-mono text-xs uppercase tracking-[0.15em] text-muted transition-colors hover:text-acid"
           >
             <Mail /> Request a walkthrough
           </a>

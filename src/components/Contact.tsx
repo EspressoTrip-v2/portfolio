@@ -91,7 +91,7 @@ export function Contact() {
           <span className="flex items-center gap-2">
             <span className="size-1.5 rounded-full bg-acid" /> Systems nominal · Built with Next.js
           </span>
-          <a href="#top" className="transition-colors hover:text-acid">
+          <a href="#top" className="-my-2 py-2 transition-colors hover:text-acid">
             Back to top ↑
           </a>
         </footer>

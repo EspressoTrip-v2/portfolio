@@ -153,7 +153,7 @@ export function Portfolio() {
           href={profile.links.github.href}
           target="_blank"
           rel="noreferrer"
-          className="group mt-10 inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.18em] text-muted transition-colors hover:text-acid"
+          className="group mt-8 inline-flex items-center gap-3 py-2 font-mono text-xs uppercase tracking-[0.18em] text-muted transition-colors hover:text-acid"
         >
           <GitHub /> All repositories on GitHub
           <ArrowUpRight className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />

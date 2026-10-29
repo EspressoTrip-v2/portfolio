@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { isIndexable, siteUrl } from "@/config/site";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
@@ -19,7 +20,9 @@ const display = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3030"),
+  metadataBase: siteUrl,
+  alternates: { canonical: "/" },
+  robots: isIndexable ? undefined : { index: false, follow: false },
   title: `${profile.name} — ${profile.title}`,
   description: profile.tagline,
   openGraph: {

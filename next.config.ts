@@ -8,6 +8,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Don't let `next dev` write an AGENTS.md into the repo.
+  agentRules: false,
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,

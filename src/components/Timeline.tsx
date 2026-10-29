@@ -98,7 +98,7 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
                 onClick={() => setOpen((v) => !v)}
                 aria-expanded={open}
                 aria-controls={bodyId}
-                className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-acid"
+                className="mt-3 inline-flex items-center gap-2 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-acid"
               >
                 <Plus className={`size-3.5 transition-transform duration-300 ${open ? "rotate-45" : ""}`} />
                 {open ? "Show less" : `${hidden} more`}
