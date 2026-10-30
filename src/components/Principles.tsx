@@ -10,10 +10,10 @@ export function Principles() {
       kicker="How I build"
       title={
         <>
-          Principles, <span className="text-muted">with receipts.</span>
+          Engineering principles, <span className="text-muted">backed by evidence.</span>
         </>
       }
-      intro="Opinions are cheap. Each of these is backed by something I've shipped."
+      intro="Each principle is grounded in systems I have designed and delivered in production."
     >
       <ol className="grid gap-px border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
         {principles.map((principle, i) => (

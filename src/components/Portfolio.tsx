@@ -131,7 +131,7 @@ export function Portfolio() {
       kicker="Portfolio"
       title={
         <>
-          Selected work. <span className="text-muted">More shipping soon.</span>
+          Selected work. <span className="text-muted">Public code and open-source contributions.</span>
         </>
       }
     >

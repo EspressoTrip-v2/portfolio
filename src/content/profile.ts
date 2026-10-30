@@ -63,10 +63,10 @@ export const profile = {
   available: true,
   availability: "Open to select opportunities",
   tagline:
-    "I design event-driven backends that stay up, scale out and explain themselves.",
+    "I design and build event-driven backend platforms that are reliable, observable and built to scale.",
   summary: [
-    "Results-driven engineer with 12+ years of building software. I started out in electrical engineering, and that is still how I approach systems: understand the load, design for failure, and leave every circuit labelled.",
-    "I work mostly in TypeScript and Go, with Python and C++ when a problem needs them. My focus is distributed, event-driven architecture: multi-tenant microservices on Kubernetes, message brokers, typed contracts and the observability that keeps them honest. Right now I'm leading a TypeScript platform rebuild at Alpha7x.",
+    "Backend engineer with 12+ years of experience building software. My background is in electrical engineering, and I still approach systems the same way: understand the load, design for failure and document every circuit.",
+    "I work primarily in TypeScript and Go, with Python and C++ where a problem calls for them. I specialise in distributed, event-driven architecture: multi-tenant platforms, multi-region data sync infrastructure, typed service contracts, and the observability and cost visibility that keep them dependable. I have led ground-up platform rebuilds and supported large multi-region production estates. I currently lead a TypeScript platform rebuild at Alpha7x.",
   ],
   links: {
     email: {
@@ -90,7 +90,7 @@ export const profile = {
 export const stats = [
   { value: 12, suffix: "+", label: "Years building software" },
   { value: 15, suffix: "×", label: "Faster admin content tree" },
-  { value: 14, suffix: "", label: "Services in the platform I led" },
+  { value: 5, suffix: "", label: "Industries served" },
   { value: 3, suffix: "", label: "Countries worked in" },
 ];
 
@@ -108,7 +108,7 @@ export const experience: Role[] = [
       "Designed Kafka event flows across the backend, import, communication, orders and response services, with retry and version-conflict handling for tenant events.",
       "Built the import pipeline: authenticated document uploads into MongoDB GridFS, BullMQ background workflows and pluggable Azure, AWS and FTP storage providers.",
       "Created @alpha7x/common-ts, the shared ESM contracts package for roles, identity, Kafka topics and error schemas, published to a private Azure Artifacts feed.",
-      "Ship to AKS through ArgoCD GitOps, with a standard Minikube, Skaffold and Docker Compose development setup across services.",
+      "Delivering to AKS through ArgoCD GitOps, with a standard Minikube, Skaffold and Docker Compose development environment across services.",
     ],
     stack: ["TypeScript", "Fastify", "Zod", "Kafka", "MongoDB", "BullMQ", "Redis", "Keycloak", "Datadog", "AKS", "ArgoCD"],
   },
@@ -123,15 +123,17 @@ export const experience: Role[] = [
     end: "Apr 2026",
     location: "Cape Town, ZA",
     blurb:
-      "Platform company behind tools for building enterprise apps and PowerSync, an offline-first data sync engine.",
+      "Enterprise application platform and the company behind PowerSync, the open-source engine that keeps on-device SQLite in sync with Postgres, MongoDB, MySQL and SQL Server.",
     highlights: [
-      "Built backend systems and internal tooling across both the JourneyApps platform and PowerSync to improve reliability, visibility and operational insight.",
-      "Designed and implemented SDK connection reporting, showing how customers adopt the SDK, how they use it and how their connections behave.",
-      "Built Atlas billing and cost-tracking processes that show what drives infrastructure cost and make internal reporting more accurate.",
-      "Improved monitoring and observability across platform systems, which made service behaviour easier to see and troubleshooting faster.",
-      "Upgraded and maintained services across the platform and fixed security issues in the codebase.",
+      "Delivered SDK and client-connection reporting end to end, from the open-source PowerSync Service through the cloud management API to usage storage, giving the business visibility into SDK adoption, versions and connection behaviour.",
+      "Built usage metering that aggregates Prometheus metrics across PowerSync Cloud's multi-region Kubernetes clusters, supporting usage-based billing and dashboard reporting.",
+      "Designed and delivered the dashboard sync service, which runs PowerSync's own sync engine in-house to power the PowerSync Cloud dashboard.",
+      "Built infrastructure cost attribution across OpenCost, MongoDB Atlas invoices and AWS spend, reported per cluster, database and client, with scheduled pipelines that handle month boundaries and late invoices correctly.",
+      "Led platform-wide upgrades across 50+ repositories, covering Node.js and toolchains, an OAuth provider migration, secret rotation, OIDC-based CI authentication, Redis and MongoDB Atlas migrations, and observability upgrades on regional clusters.",
+      "Rebuilt the employee access-control service with Slack-based approvals and signed-request verification, and extended the platform's permission-policy APIs.",
     ],
-    stack: ["TypeScript", "Node.js", "MongoDB", "Kubernetes", "Prometheus", "Grafana", "AWS"],
+    stack: ["TypeScript", "Node.js", "MongoDB Atlas", "PostgreSQL", "Kubernetes", "Pulumi", "Prometheus", "Grafana", "OpenTelemetry", "AWS"],
+    metric: { value: "50+", label: "platform repositories" },
   },
   {
     role: "Senior Developer",
@@ -143,9 +145,9 @@ export const experience: Role[] = [
     blurb:
       "UK marketplace that matches customers with transport providers and uses spare vehicle capacity to cut cost and emissions.",
     highlights: [
-      "Planned a five-stage migration from Nuxt 2 to Nuxt 3 and shipped stage one to production.",
-      "Started redesigning the repository architecture for the TPP and Admin front ends, with new standards to make developers more productive.",
-      "Set up CircleCI alerts that post AWS Fargate deployment failures to Slack, which reduced production risk and sped up response.",
+      "Planned a five-stage migration from Nuxt 2 to Nuxt 3 and delivered stage one to production.",
+      "Began redesigning the repository architecture for the TPP and Admin front ends, introducing standards to improve developer productivity.",
+      "Set up CircleCI alerts that report AWS Fargate deployment failures to Slack, reducing production risk and shortening response times.",
     ],
     stack: ["Nuxt 3", "Vue", "CircleCI", "AWS Fargate", "Slack"],
   },
@@ -159,15 +161,15 @@ export const experience: Role[] = [
     blurb:
       "Award-winning digital employee experience platform for frontline workforces.",
     highlights: [
-      "Led the rebuild of Wyzetalk as Wyzetalk Next: a multi-tenant platform of 14 event-driven TypeScript services that communicate over 73 RabbitMQ exchanges.",
-      "Wrote the shared platform library, shipped in about 2,600 releases. It provides typed publishers and consumers, retry and dead-letter topology, tenant-aware auth middleware and per-tenant database pools.",
+      "Led the ground-up rebuild of Wyzetalk as Wyzetalk Next: a multi-tenant, event-driven TypeScript platform on RabbitMQ, isolated per tenant from identity realm to database.",
+      "Authored the shared platform library underpinning every service: typed publishers and consumers, retry and dead-letter topology, tenant-aware authentication middleware and per-tenant database pools.",
       "Built a segmentation engine on Redis set algebra to replace the legacy segmentation filter, removing the bottlenecks that slowed new imports.",
-      "Designed a segment-targeted feed, a custom take on fan-out-on-write. Audience changes are pushed when they happen, so each feed read is a single RediSearch query.",
-      "Kept the platform vendor-agnostic with adapter interfaces for email, push, SMS and AI, so it stays portable across Azure, AWS, IBM and GCP.",
-      "Standardised testing across the platform: 880+ Vitest and Supertest cases that run against in-memory MongoDB replica sets and Redis Stack.",
+      "Designed a segment-targeted feed based on fan-out-on-write. Audience changes are applied as they happen, so each feed read is a single RediSearch query.",
+      "Kept the platform vendor-agnostic through adapter interfaces for email, push, SMS and AI, keeping it portable across Azure, AWS, IBM and GCP.",
+      "Standardised testing across the platform with Vitest and Supertest suites that run against in-memory MongoDB replica sets and Redis Stack rather than mocks.",
     ],
     stack: ["TypeScript", "Express", "MongoDB", "Redis Search", "RedisJSON", "RabbitMQ", "BullMQ", "Keycloak", "Vault", "Kubernetes"],
-    metric: { value: "14 services", label: "multi-tenant platform" },
+    metric: { value: "Greenfield", label: "multi-tenant platform rebuild" },
     caseStudy: "#case-study",
   },
   {
@@ -195,11 +197,11 @@ export const experience: Role[] = [
     end: "Jul 2021",
     location: "Eastern Cape, ZA",
     blurb:
-      "Long-established sawmill group. Built desktop tooling that sat between sales staff and the Sage ERP.",
+      "Long-established timber and sawmill group. Built desktop tooling that connected sales staff with the Sage ERP.",
     highlights: [
-      "Built a Windows desktop app that floats over Sage, letting staff copy and auto-paste price-list data with one click.",
+      "Built a Windows desktop application that runs alongside Sage, letting staff copy and paste price-list data with one click.",
       "Added fast customer price-list search with summarised views generated by P2Sys Manager.",
-      "Added validation that emails the sales manager, Sage admin and director when price lists are missing or prices don't match.",
+      "Added validation that emails the sales manager, Sage admin and director when price lists are missing or prices do not match.",
       "Made sales order creation faster and less error-prone by automating manual steps.",
     ],
     stack: ["Node.js", "Electron", "PowerShell", "Sage"],
@@ -259,14 +261,14 @@ export const caseStudy = {
   summary:
     "A ground-up rebuild of a frontline employee-communication product as a multi-tenant platform. Each customer gets its own subdomain, identity realm and database. Admins target posts at audience segments, and employees get a personalised feed with comments, reactions, notifications and support.",
   metrics: [
-    { value: "14", label: "Backend services" },
-    { value: "117k", label: "Lines of TypeScript" },
-    { value: "73", label: "Event exchanges" },
-    { value: "96", label: "Event consumers" },
-    { value: "148", label: "Documented API operations" },
-    { value: "880+", label: "Automated tests" },
+    { value: "1:1", label: "Tenant to identity realm" },
+    { value: "1:1", label: "Tenant to database" },
+    { value: "0", label: "Central orchestrators" },
+    { value: "1", label: "Query per feed read" },
+    { value: "2→32s", label: "Exponential retry backoff" },
+    { value: "4", label: "Swappable provider adapters" },
     { value: "9", label: "UI languages" },
-    { value: "2.6k", label: "Shared-library releases" },
+    { value: "880+", label: "Integration tests" },
   ],
   services: [
     { name: "public", lane: "edge", role: "Unauthenticated tenant lookup that starts the login flow.", tech: ["Express"] },
@@ -313,7 +315,7 @@ export const caseStudy = {
       id: "retry",
       title: "Retry & dead-letter topology",
       summary:
-        "Every consumer gets the same failure handling from the shared library. Transient errors back off and recover without anyone being paged.",
+        "Every consumer inherits the same failure handling from the shared library. Transient errors back off and recover without manual intervention.",
       steps: [
         { actor: "consumer", text: "Sends a failed message to a TTL retry queue for that attempt." },
         { actor: "broker", text: "When the TTL expires, a dead-letter exchange routes the message back to the main queue." },
@@ -341,33 +343,33 @@ export const caseStudy = {
 export const principles = [
   {
     title: "Contracts first",
-    body: "Services agree on typed contracts before anything else. If the compiler won't accept a payload on the wrong exchange, it can't be sent there.",
-    evidence: "70 typed event contracts in a shared package · Zod schemas and generated OpenAPI at Alpha7x",
+    body: "Services agree on typed contracts before implementation begins. If the compiler rejects a payload on the wrong exchange, it cannot reach production.",
+    evidence: "Shared typed event contracts at Wyzetalk · Zod schemas and generated OpenAPI at Alpha7x",
   },
   {
     title: "Design for failure",
-    body: "Every dependency will fail at some point. Retries, backoff and dead-letter paths are the default, not something added later.",
-    evidence: "TTL retry queues and dead-letter exchanges · 2 → 32 s backoff · version-conflict retries",
+    body: "Every dependency will eventually fail. Retries, backoff and dead-letter paths are part of the initial design, not added later.",
+    evidence: "TTL retry queues and dead-letter exchanges · 2 → 32 s backoff · cost pipelines with retry limits, chunked writes and reprocessing",
   },
   {
     title: "Isolate tenants by default",
-    body: "Tenant boundaries belong in the architecture, not in WHERE clauses that someone will eventually forget.",
+    body: "Tenant boundaries belong in the architecture, not in query filters that are easy to overlook.",
     evidence: "Identity realm per tenant · database per tenant · tenant-prefixed Redis keys",
   },
   {
-    title: "Readiness reflects reality",
-    body: "A pod is ready when its broker, database and cache connections are ready, not when the process starts.",
-    evidence: "Readiness gates driven by live RabbitMQ, MongoDB and Redis connection state",
+    title: "Observability is part of the feature",
+    body: "Metrics, traces and cost data are delivered with the feature. A service is ready when its broker, database and cache are ready, not when the process starts.",
+    evidence: "Readiness gated on live broker, database and cache state · Prometheus usage metering and per-cluster cost attribution at PowerSync",
   },
   {
     title: "Test what ships",
-    body: "Tests run against real engines in memory, so they catch the bugs that mocks hide.",
-    evidence: "880+ Vitest and Supertest cases · in-memory MongoDB replica sets and Redis Stack",
+    body: "Tests run against real engines in memory, catching the defects that mocks conceal.",
+    evidence: "Vitest and Supertest against in-memory MongoDB replica sets and Redis Stack · legacy suites moved to Vitest at JourneyApps",
   },
   {
     title: "Developer experience is infrastructure",
-    body: "If the stack takes a day to run locally, every production fix takes a week.",
-    evidence: "One make deploy for the whole data tier · Minikube, Skaffold and Compose · pattern reused at Alpha7x",
+    body: "When the stack takes a day to run locally, every production fix takes a week. Fast local environments are a delivery requirement.",
+    evidence: "One make deploy for the whole data tier · an internal CLI for Kubernetes manifests, sealed secrets and releases · pattern reused at Alpha7x",
   },
 ];
 
@@ -385,17 +387,17 @@ export const skillGroups = [
   {
     title: "Data",
     code: "DATA",
-    items: ["MongoDB", "Redis", "Redis Search", "RedisJSON", "PostgreSQL", "SQL"],
+    items: ["MongoDB", "MongoDB Atlas", "Redis", "Redis Search", "RedisJSON", "PostgreSQL", "SQLite", "SQL"],
   },
   {
     title: "Cloud & Platform",
     code: "INFRA",
-    items: ["Kubernetes", "AKS", "ArgoCD", "LinkerD", "Vault", "Pulumi", "Skaffold", "Minikube", "AWS", "Azure", "IBM Cloud", "CI/CD"],
+    items: ["Kubernetes", "EKS", "AKS", "Helm", "ArgoCD", "LinkerD", "Vault", "Pulumi", "Skaffold", "Minikube", "AWS", "Azure", "IBM Cloud", "GitHub Actions", "CI/CD"],
   },
   {
     title: "Observability & Identity",
     code: "OPS",
-    items: ["OpenTelemetry", "Prometheus", "Grafana", "Datadog", "Jaeger", "Keycloak", "OAuth", "JumpCloud"],
+    items: ["OpenTelemetry", "Prometheus", "Grafana", "Grafana Tempo", "Datadog", "Jaeger", "Sentry", "OpenCost", "Keycloak", "OAuth", "JumpCloud"],
   },
   {
     title: "Frontend & Quality",
@@ -418,8 +420,22 @@ export const projects: Project[] = [
   {
     name: "concept-application",
     description:
-      "A five-week proof of concept for an event-driven microservice platform. It has six domains, each split into an API and a service, with TypeScript and Go services talking over gRPC and RabbitMQ. MongoDB, PostgreSQL and RabbitMQ are provisioned by Kubernetes operators, with a LinkerD service mesh and Jaeger tracing.",
+      "A five-week proof of concept for an event-driven microservice platform. Six domains, each split into an API and a service, with TypeScript and Go services communicating over gRPC and RabbitMQ. MongoDB, PostgreSQL and RabbitMQ are provisioned by Kubernetes operators, with a LinkerD service mesh and Jaeger tracing.",
     stack: ["TypeScript", "Go", "Kubernetes", "LinkerD", "gRPC", "RabbitMQ"],
     href: "https://github.com/EspressoTrip-v2/concept-application",
+  },
+  {
+    name: "powersync-service",
+    description:
+      "Merged contributions to PowerSync's open-source sync service, which keeps on-device SQLite in sync with Postgres, MongoDB and MySQL. Contributions include SDK reporting, client analytics, replication replicas and a JWT handling fix.",
+    stack: ["TypeScript", "Node.js", "PostgreSQL", "MongoDB", "MySQL"],
+    href: "https://github.com/powersync-ja/powersync-service",
+  },
+  {
+    name: "https-proxy-socket",
+    description:
+      "JourneyApps' open-source Node.js library for socket connections through an HTTPS proxy. Fixed socket cleanup and error handling, released v1.0.0, and introduced Vitest and changeset-based releases.",
+    stack: ["TypeScript", "Node.js", "Vitest", "Changesets", "GitHub Actions"],
+    href: "https://github.com/journeyapps/https-proxy-socket",
   },
 ];

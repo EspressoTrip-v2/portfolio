@@ -10,7 +10,7 @@ export function Skills() {
       kicker="Stack"
       title={
         <>
-          Tools I trust <span className="text-muted">in production.</span>
+          Technology <span className="text-muted">proven in production.</span>
         </>
       }
     >

@@ -43,7 +43,7 @@ function EventBus() {
         />
       ))}
       <span className="relative mx-auto border border-acid/40 bg-ink px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-acid">
-        RabbitMQ event bus · 73 exchanges
+        RabbitMQ event bus · typed contracts
       </span>
     </div>
   );

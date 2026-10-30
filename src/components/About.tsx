@@ -10,6 +10,7 @@ const whoami = [
   ["worked_in", `["ZA", "UAE", "QA"]`],
   ["primary", `["TypeScript", "Go"]`],
   ["now", `"Lead Backend Engineer @ Alpha7x"`],
+  ["delivered", `["multi-tenant SaaS", "data sync", "cost reporting"]`],
   ["thinks_in", `"events, contracts, failure modes"`],
   ["status", `"${profile.availability.toLowerCase()}"`],
 ];

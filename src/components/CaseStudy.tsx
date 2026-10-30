@@ -12,7 +12,7 @@ export function CaseStudy() {
       kicker="Case study"
       title={
         <>
-          {caseStudy.name}. <span className="text-muted">Fourteen services, one event bus.</span>
+          {caseStudy.name}. <span className="text-muted">Event-driven and multi-tenant by design.</span>
         </>
       }
       intro={caseStudy.summary}
@@ -24,6 +24,7 @@ export function CaseStudy() {
           </span>
           <span className="border border-line px-3 py-1.5 text-dim">{caseStudy.period}</span>
           <span className="border border-line px-3 py-1.5 text-dim">Technical lead · primary backend author</span>
+          <span className="border border-acid/30 px-3 py-1.5 text-acid">Selected for architectural clarity</span>
         </div>
       </Reveal>
 

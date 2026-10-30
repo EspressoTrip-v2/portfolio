@@ -148,7 +148,7 @@ export function Timeline() {
           <span className="text-acid">service meshes.</span>
         </>
       }
-      intro="I started in the electrical trades, managed businesses in the Gulf, then moved into software. Today I lead a TypeScript platform rebuild at Alpha7x."
+      intro="My career began in the electrical trade and continued through business management in the Gulf before moving into software. Since then I have built multi-tenant platforms and multi-region sync infrastructure, and I currently lead a backend platform rebuild at Alpha7x."
     >
       <div ref={ref} className="relative">
         <div aria-hidden className="absolute bottom-0 left-2 top-0 w-px bg-line md:left-1/4">

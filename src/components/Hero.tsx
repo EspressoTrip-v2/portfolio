@@ -1,11 +1,12 @@
 import Image from "next/image";
-import { profile, skillGroups } from "@/content/profile";
+import { experience, profile, skillGroups } from "@/content/profile";
 import portrait from "../../public/juan.jpg";
 import { ArrowDown, ArrowUpRight } from "./Icons";
 import { Reveal } from "./Reveal";
 import { ScrambleText } from "./ScrambleText";
 
 const marquee = [...new Set(skillGroups.flatMap((group) => group.items))];
+const companies = [...new Set(experience.flatMap((role) => role.links?.map((link) => link.label) ?? [role.company]))];
 
 function Corners() {
   const corner = "absolute size-4 border-acid";
@@ -71,6 +72,19 @@ export function Hero() {
                 <ArrowUpRight className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </a>
             </div>
+          </Reveal>
+
+          <Reveal delay={0.5}>
+            <p className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.2em] text-dim">
+              <span>Experience</span>
+              <span className="text-acid">→</span>
+              {companies.map((company, i) => (
+                <span key={company} className="inline-flex items-center gap-3">
+                  <span className="text-fg/75">{company}</span>
+                  {i < companies.length - 1 && <span>/</span>}
+                </span>
+              ))}
+            </p>
           </Reveal>
         </div>
 

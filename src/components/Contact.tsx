@@ -89,7 +89,7 @@ export function Contact() {
         <footer className="mt-28 flex flex-col gap-4 border-t border-line pt-8 font-mono text-[11px] uppercase tracking-[0.18em] text-dim sm:flex-row sm:items-center sm:justify-between">
           <span>© {profile.name}</span>
           <span className="flex items-center gap-2">
-            <span className="size-1.5 rounded-full bg-acid" /> Systems nominal · Built with Next.js
+            <span className="size-1.5 rounded-full bg-acid" /> Built with Next.js
           </span>
           <a href="#top" className="-my-2 py-2 transition-colors hover:text-acid">
             Back to top ↑
