@@ -22,10 +22,10 @@ export function ArrowUpRight(props: IconProps) {
   );
 }
 
-export function ArrowDown(props: IconProps) {
+export function Close(props: IconProps) {
   return (
     <svg {...base} {...props}>
-      <path d="M12 5v14M5 12l7 7 7-7" />
+      <path d="M6 6l12 12M18 6 6 18" />
     </svg>
   );
 }
@@ -52,14 +52,6 @@ export function Check(props: IconProps) {
   return (
     <svg {...base} {...props}>
       <path d="m5 12 5 5L20 7" />
-    </svg>
-  );
-}
-
-export function Plus(props: IconProps) {
-  return (
-    <svg {...base} {...props}>
-      <path d="M12 5v14M5 12h14" />
     </svg>
   );
 }

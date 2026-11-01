@@ -1,82 +1,46 @@
-import { education, languages, profile } from "@/content/profile";
-import { Reveal } from "./Reveal";
+import Image from "next/image";
+import { education, experience, languages, profile } from "@/content/profile";
+import portrait from "../../public/juan.jpg";
 import { Section } from "./Section";
-
-const whoami = [
-  ["name", `"${profile.name}"`],
-  ["role", `"${profile.title}"`],
-  ["base", `"${profile.location}"`],
-  ["origin", `"Electrical trade → engineering → software"`],
-  ["worked_in", `["ZA", "UAE", "QA"]`],
-  ["primary", `["TypeScript", "Go"]`],
-  ["now", `"Lead Backend Engineer @ Alpha7x"`],
-  ["delivered", `["multi-tenant SaaS", "data sync", "cost reporting"]`],
-  ["thinks_in", `"events, contracts, failure modes"`],
-  ["status", `"${profile.availability.toLowerCase()}"`],
-];
+import { RatingPlate } from "./ui/RatingPlate";
 
 export function About() {
+  const current = experience.find((role) => role.end === "Present");
+  const trade = education[0];
+
+  const facts = [
+    { label: "Based in", value: profile.location.replace(", ZA", ", South Africa") },
+    ...(current ? [{ label: "Working on", value: `${current.role}, ${current.company}` }] : []),
+    { label: "Trade qualification", value: `${trade.name}, ${trade.period.replace(" – ", " to ")}` },
+    { label: "Languages", value: languages.map((l) => `${l.name} (${l.level.toLowerCase()})`).join(", ") },
+  ];
+
   return (
-    <Section
-      id="about"
-      index="01"
-      kicker="About"
-      title={
-        <>
-          Engineer by trade.{" "}
-          <span className="text-muted">Systems thinker by habit.</span>
-        </>
-      }
-    >
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-        <Reveal className="min-w-0 space-y-6 text-lg leading-relaxed text-fg/85 lg:col-span-6">
+    <Section id="about" title="Engineer by trade" tilt={-1.2}>
+      <div className="grid gap-12 lg:grid-cols-12">
+        <div className="space-y-5 lg:col-span-7">
           {profile.summary.map((paragraph) => (
-            <p key={paragraph.slice(0, 24)} className="text-pretty">
+            <p key={paragraph.slice(0, 24)} className="max-w-[62ch] text-pretty">
               {paragraph}
             </p>
           ))}
-          <dl className="grid grid-cols-2 gap-px border border-line bg-line pt-0 text-sm">
-            {[...education.map((e) => [e.issuer, `${e.name} · ${e.period}`]), ...languages.map((l) => [l.name, l.level])].map(
-              ([k, v]) => (
-                <div key={k} className="bg-ink px-4 py-3">
-                  <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-dim">{k}</dt>
-                  <dd className="mt-1 text-fg/90">{v}</dd>
-                </div>
-              ),
-            )}
-          </dl>
-        </Reveal>
+        </div>
 
-        <Reveal delay={0.15} className="min-w-0 lg:col-span-6">
-          <div className="overflow-hidden border border-line bg-panel/80 shadow-[0_40px_120px_-40px_rgb(200_255_61/0.15)] backdrop-blur">
-            <div className="flex items-center gap-2 border-b border-line px-4 py-3">
-              <span className="size-2.5 rounded-full bg-line-strong" />
-              <span className="size-2.5 rounded-full bg-line-strong" />
-              <span className="size-2.5 rounded-full bg-acid" />
-              <span className="ml-3 font-mono text-[11px] text-dim">juan@plett: ~</span>
+        <div className="grid content-start gap-8 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1">
+          {/* Photo taped to the steel */}
+          <figure className="chart-paper w-full max-w-[18rem] rotate-[1.5deg] p-2.5 pb-3">
+            <div className="relative aspect-[4/5] overflow-hidden">
+              <Image
+                src={portrait}
+                alt={`Portrait of ${profile.name}`}
+                fill
+                sizes="(min-width: 1024px) 288px, (min-width: 640px) 45vw, 90vw"
+                className="object-cover object-[40%_30%]"
+              />
             </div>
-            <pre className="overflow-x-auto p-5 font-mono text-[11.5px] leading-7 sm:p-7 sm:text-[13px]">
-              <code>
-                <span className="text-acid">$</span> whoami --json{"\n"}
-                <span className="text-dim">{"{"}</span>
-                {"\n"}
-                {whoami.map(([key, value], i) => (
-                  <span key={key}>
-                    {"  "}
-                    <span className="text-cyan">&quot;{key}&quot;</span>
-                    <span className="text-dim">: </span>
-                    <span className="text-fg/90">{value}</span>
-                    <span className="text-dim">{i < whoami.length - 1 ? "," : ""}</span>
-                    {"\n"}
-                  </span>
-                ))}
-                <span className="text-dim">{"}"}</span>
-                {"\n"}
-                <span className="text-acid">$</span> <span className="inline-block h-4 w-2 translate-y-0.5 animate-blink bg-acid" />
-              </code>
-            </pre>
-          </div>
-        </Reveal>
+          </figure>
+          <RatingPlate label="Quick facts" title="Quick facts" rows={facts} className="self-start text-small" />
+        </div>
       </div>
     </Section>
   );

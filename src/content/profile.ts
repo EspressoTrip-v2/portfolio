@@ -21,6 +21,8 @@ export type Role = {
   stack: string[];
   metric?: { value: string; label: string };
   caseStudy?: string;
+  /** Month a contract with the same company ran to after the employed role ended, e.g. "Apr 2025". */
+  contractUntil?: string;
 };
 
 export type EarlierRole = {
@@ -64,6 +66,8 @@ export const profile = {
   availability: "Open to select opportunities",
   tagline:
     "I design and build event-driven backend platforms that are reliable, observable and built to scale.",
+  /** Hero line, in the voice of the electrical trade Juan came from. */
+  lede: "I design event-driven backend platforms the way I wired boards: know the load, plan for the fault, label every circuit.",
   summary: [
     "Backend engineer with 12+ years of experience building software. My background is in electrical engineering, and I still approach systems the same way: understand the load, design for failure and document every circuit.",
     "I work primarily in TypeScript and Go, with Python and C++ where a problem calls for them. I specialise in distributed, event-driven architecture: multi-tenant platforms, multi-region data sync infrastructure, typed service contracts, and the observability and cost visibility that keep them dependable. I have led ground-up platform rebuilds and supported large multi-region production estates. I currently lead a TypeScript platform rebuild at Alpha7x.",
@@ -86,13 +90,6 @@ export const profile = {
     },
   } satisfies Record<string, Link>,
 };
-
-export const stats = [
-  { value: 12, suffix: "+", label: "Years building software" },
-  { value: 15, suffix: "×", label: "Faster admin content tree" },
-  { value: 5, suffix: "", label: "Industries served" },
-  { value: 3, suffix: "", label: "Countries worked in" },
-];
 
 export const experience: Role[] = [
   {
@@ -157,6 +154,7 @@ export const experience: Role[] = [
     links: [{ label: "Wyzetalk", href: "https://www.wyzetalk.com" }],
     start: "Jan 2022",
     end: "Jan 2025",
+    contractUntil: "Apr 2025",
     location: "Stellenbosch, ZA",
     blurb:
       "Award-winning digital employee experience platform for frontline workforces.",
@@ -187,10 +185,10 @@ export const experience: Role[] = [
       "Mentored UI developers as they integrated the new API.",
     ],
     stack: ["TypeScript", "Node.js", "MongoDB", "REST APIs"],
-    metric: { value: "30s → 2s", label: "content tree load time" },
+    metric: { value: "30 s to 2 s", label: "content tree load time" },
   },
   {
-    role: "Software Developer · P2Sys Viewer",
+    role: "Software Developer, P2Sys Viewer",
     company: "A.C Whitcher",
     links: [{ label: "A.C Whitcher", href: "https://www.acwhitcher.co.za" }],
     start: "Aug 2020",
@@ -207,7 +205,7 @@ export const experience: Role[] = [
     stack: ["Node.js", "Electron", "PowerShell", "Sage"],
   },
   {
-    role: "Software Developer · P2Sys Manager",
+    role: "Software Developer, P2Sys Manager",
     company: "A.C Whitcher",
     links: [{ label: "A.C Whitcher", href: "https://www.acwhitcher.co.za" }],
     start: "Jan 2019",
@@ -265,7 +263,7 @@ export const caseStudy = {
     { value: "1:1", label: "Tenant to database" },
     { value: "0", label: "Central orchestrators" },
     { value: "1", label: "Query per feed read" },
-    { value: "2→32s", label: "Exponential retry backoff" },
+    { value: "2 to 32 s", label: "Exponential retry backoff" },
     { value: "4", label: "Swappable provider adapters" },
     { value: "9", label: "UI languages" },
     { value: "880+", label: "Integration tests" },
@@ -344,64 +342,79 @@ export const principles = [
   {
     title: "Contracts first",
     body: "Services agree on typed contracts before implementation begins. If the compiler rejects a payload on the wrong exchange, it cannot reach production.",
-    evidence: "Shared typed event contracts at Wyzetalk · Zod schemas and generated OpenAPI at Alpha7x",
+    evidence: [
+      "Shared typed event contracts at Wyzetalk",
+      "Zod schemas and generated OpenAPI at Alpha7x",
+    ],
   },
   {
     title: "Design for failure",
     body: "Every dependency will eventually fail. Retries, backoff and dead-letter paths are part of the initial design, not added later.",
-    evidence: "TTL retry queues and dead-letter exchanges · 2 → 32 s backoff · cost pipelines with retry limits, chunked writes and reprocessing",
+    evidence: [
+      "TTL retry queues and dead-letter exchanges",
+      "2 to 32 s backoff",
+      "Cost pipelines with retry limits, chunked writes and reprocessing",
+    ],
   },
   {
     title: "Isolate tenants by default",
     body: "Tenant boundaries belong in the architecture, not in query filters that are easy to overlook.",
-    evidence: "Identity realm per tenant · database per tenant · tenant-prefixed Redis keys",
+    evidence: [
+      "Identity realm per tenant",
+      "Database per tenant",
+      "Tenant-prefixed Redis keys",
+    ],
   },
   {
     title: "Observability is part of the feature",
     body: "Metrics, traces and cost data are delivered with the feature. A service is ready when its broker, database and cache are ready, not when the process starts.",
-    evidence: "Readiness gated on live broker, database and cache state · Prometheus usage metering and per-cluster cost attribution at PowerSync",
+    evidence: [
+      "Readiness gated on live broker, database and cache state",
+      "Prometheus usage metering and per-cluster cost attribution at PowerSync",
+    ],
   },
   {
     title: "Test what ships",
     body: "Tests run against real engines in memory, catching the defects that mocks conceal.",
-    evidence: "Vitest and Supertest against in-memory MongoDB replica sets and Redis Stack · legacy suites moved to Vitest at JourneyApps",
+    evidence: [
+      "Vitest and Supertest against in-memory MongoDB replica sets and Redis Stack",
+      "Legacy suites moved to Vitest at JourneyApps",
+    ],
   },
   {
     title: "Developer experience is infrastructure",
     body: "When the stack takes a day to run locally, every production fix takes a week. Fast local environments are a delivery requirement.",
-    evidence: "One make deploy for the whole data tier · an internal CLI for Kubernetes manifests, sealed secrets and releases · pattern reused at Alpha7x",
+    evidence: [
+      "One make deploy for the whole data tier",
+      "An internal CLI for Kubernetes manifests, sealed secrets and releases",
+      "Pattern reused at Alpha7x",
+    ],
   },
 ];
 
 export const skillGroups = [
   {
     title: "Languages",
-    code: "LANG",
     items: ["TypeScript", "JavaScript", "Go", "Python", "C++", "SQL"],
   },
   {
     title: "Backend & Messaging",
-    code: "CORE",
     items: ["Node.js", "Fastify", "Express", "Gorilla MUX", "gRPC", "OpenAPI", "Zod", "RabbitMQ", "Kafka", "BullMQ"],
   },
   {
     title: "Data",
-    code: "DATA",
     items: ["MongoDB", "MongoDB Atlas", "Redis", "Redis Search", "RedisJSON", "PostgreSQL", "SQLite", "SQL"],
   },
   {
     title: "Cloud & Platform",
-    code: "INFRA",
     items: ["Kubernetes", "EKS", "AKS", "Helm", "ArgoCD", "LinkerD", "Vault", "Pulumi", "Skaffold", "Minikube", "AWS", "Azure", "IBM Cloud", "GitHub Actions", "CI/CD"],
   },
   {
     title: "Observability & Identity",
-    code: "OPS",
     items: ["OpenTelemetry", "Prometheus", "Grafana", "Grafana Tempo", "Datadog", "Jaeger", "Sentry", "OpenCost", "Keycloak", "OAuth", "JumpCloud"],
   },
   {
     title: "Frontend & Quality",
-    code: "UI/QA",
     items: ["React", "Nuxt", "HTML", "CSS", "Vitest", "Supertest", "Agile", "OOP"],
   },
 ];

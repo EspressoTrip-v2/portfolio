@@ -1,22 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Archivo } from "next/font/google";
 import { isIndexable, siteUrl } from "@/config/site";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// One variable family. The width axis does the work: expanded for label tape,
+// condensed for data, normal for reading.
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const display = Space_Grotesk({
-  variable: "--font-display",
-  subsets: ["latin"],
+  axes: ["wdth"],
 });
 
 export const metadata: Metadata = {
@@ -33,16 +26,16 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#060708",
+  themeColor: "#C3C7CA",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${display.variable} antialiased`}
+      className={`${archivo.variable} antialiased`}
     >
-      <body className="min-h-dvh overflow-x-clip">{children}</body>
+      <body className="min-h-dvh overflow-x-clip text-body">{children}</body>
     </html>
   );
 }

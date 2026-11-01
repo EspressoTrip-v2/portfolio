@@ -1,37 +1,64 @@
+"use client";
+
 import { principles } from "@/content/profile";
-import { Reveal } from "./Reveal";
+import { useInView } from "@/lib/useInView";
 import { Section } from "./Section";
 
+/** "How I build" as the circuit chart taped inside a board's door. It swings down into place when scrolled to. */
 export function Principles() {
+  const [ref, inView] = useInView<HTMLDivElement>(0.2);
+
   return (
     <Section
       id="principles"
-      index="04"
-      kicker="How I build"
-      title={
-        <>
-          Engineering principles, <span className="text-muted">backed by evidence.</span>
-        </>
-      }
-      intro="Each principle is grounded in systems I have designed and delivered in production."
+      title="Circuit chart"
+      tilt={-1.4}
+      intro="How I build, written the way every board I wired was documented: the circuit, what it feeds, and the proof it holds."
     >
-      <ol className="grid gap-px border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
-        {principles.map((principle, i) => (
-          <li key={principle.title} className="h-full">
-            <Reveal delay={(i % 3) * 0.08} className="h-full">
-              <article className="group relative flex h-full flex-col bg-ink p-6 transition-colors hover:bg-ink-2 sm:p-8">
-                <span className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-acid transition-transform duration-500 group-hover:scale-x-100" />
-                <span className="font-mono text-xs text-acid">{String(i + 1).padStart(2, "0")}</span>
-                <h3 className="mt-4 font-display text-2xl font-medium tracking-tight">{principle.title}</h3>
-                <p className="mt-3 flex-1 leading-relaxed text-fg/75">{principle.body}</p>
-                <p className="mt-6 border-t border-dashed border-line-strong pt-4 font-mono text-[11px] leading-relaxed text-muted">
-                  <span className="text-cyan">evidence:</span> {principle.evidence}
-                </p>
-              </article>
-            </Reveal>
-          </li>
-        ))}
-      </ol>
+      <div
+        ref={ref}
+        className="chart-paper origin-top px-5 py-6 sm:px-8"
+        style={inView ? { animation: "swing-down 0.8s var(--ease-spring) both" } : { opacity: 0 }}
+      >
+        <table className="w-full border-collapse text-left">
+          <caption className="sr-only">Engineering principles and where they are proven</caption>
+          <thead>
+            <tr className="border-b-2 border-ink text-small font-bold font-stretch-[85%]">
+              <th scope="col" className="w-[3ch] py-2 pr-3">
+                No.
+              </th>
+              <th scope="col" className="py-2 pr-4">
+                Circuit
+              </th>
+              <th scope="col" className="hidden py-2 pr-4 md:table-cell">
+                Feeds
+              </th>
+              <th scope="col" className="py-2">
+                Tested on
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {principles.map((principle, i) => (
+              <tr key={principle.title} className="border-b border-[#cfcec6] align-top last:border-b-0">
+                <td className="py-4 pr-3 text-h3 font-extrabold font-stretch-[75%] tabular-nums">{i + 1}</td>
+                <th scope="row" className="py-4 pr-4 font-bold">
+                  {principle.title}
+                  <span className="mt-1 block text-small font-normal text-ink-2 md:hidden">{principle.body}</span>
+                </th>
+                <td className="hidden py-4 pr-4 text-small text-ink-2 md:table-cell">{principle.body}</td>
+                <td className="py-4">
+                  <ul className="space-y-1 text-small italic text-pen">
+                    {principle.evidence.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </Section>
   );
 }

@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // Hide the dev-only Next.js badge; it sat on top of the page in the bottom-left corner.
+  devIndicators: false,
+  // The chat route reads the knowledge document from disk at runtime.
+  outputFileTracingIncludes: {
+    "/api/chat": ["./src/content/about-me.md"],
+  },
   turbopack: {
     rules: {
       "*.css": {

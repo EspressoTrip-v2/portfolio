@@ -2,6 +2,8 @@
 
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { openChat } from "@/components/chat/ChatWidget";
+import { Screws } from "@/components/ui/Enclosure";
 import { sections } from "@/content/navigation";
 import { profile, projects } from "@/content/profile";
 
@@ -15,7 +17,6 @@ type Command = {
   id: string;
   group: "Navigate" | "Actions" | "Links";
   label: string;
-  glyph: string;
   hint?: string;
   run: () => void | Promise<void>;
 };
@@ -47,21 +48,26 @@ export function CommandPalette() {
     const { email, github, linkedin } = profile.links;
     const [featured] = projects;
     return [
-      ...sections.map((section, i) => ({
+      ...sections.map((section) => ({
         id: `go-${section.id}`,
         group: "Navigate" as const,
         label: section.label,
-        glyph: `0${i + 1}`,
         hint: `#${section.id}`,
         run: () => {
           window.location.hash = section.id;
         },
       })),
       {
+        id: "ask",
+        group: "Actions",
+        label: "Ask about Juan",
+        hint: "Chat assistant",
+        run: openChat,
+      },
+      {
         id: "copy-email",
         group: "Actions",
         label: "Copy email address",
-        glyph: "⧉",
         hint: email.handle,
         run: async () => {
           await navigator.clipboard.writeText(email.handle);
@@ -71,16 +77,15 @@ export function CommandPalette() {
       {
         id: "email",
         group: "Actions",
-        label: "Send me an email",
-        glyph: "@",
+        label: "Send Juan an email",
         run: () => {
           window.location.href = email.href;
         },
       },
-      { id: "github", group: "Links", label: "GitHub", glyph: "↗", hint: github.handle, run: () => openExternal(github.href) },
-      { id: "linkedin", group: "Links", label: "LinkedIn", glyph: "↗", hint: linkedin.handle, run: () => openExternal(linkedin.href) },
+      { id: "github", group: "Links", label: "GitHub", hint: github.handle, run: () => openExternal(github.href) },
+      { id: "linkedin", group: "Links", label: "LinkedIn", hint: linkedin.handle, run: () => openExternal(linkedin.href) },
       ...(featured
-        ? [{ id: "featured", group: "Links" as const, label: featured.name, glyph: "↗", hint: "GitHub repo", run: () => openExternal(featured.href) }]
+        ? [{ id: "featured", group: "Links" as const, label: featured.name, hint: "GitHub repo", run: () => openExternal(featured.href) }]
         : []),
     ];
   }, [notify]);
@@ -176,7 +181,7 @@ export function CommandPalette() {
         {open && (
           <motion.div
             key="palette"
-            className="fixed inset-0 z-[70] flex items-start justify-center bg-ink/70 px-4 pt-[12vh] backdrop-blur-sm"
+            className="fixed inset-0 z-[70] flex items-start justify-center bg-ink/40 px-4 pt-[12vh]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -189,14 +194,14 @@ export function CommandPalette() {
               role="dialog"
               aria-modal="true"
               aria-label="Command palette"
-              className="w-full max-w-xl overflow-hidden border border-line-strong bg-panel shadow-[0_40px_120px_-20px_rgb(0_0_0/0.8),0_0_0_1px_rgb(200_255_61/0.08)]"
+              className="enclosure w-full max-w-xl overflow-hidden pt-3"
               initial={{ opacity: 0, y: -12, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.98 }}
               transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="flex items-center gap-3 border-b border-line px-4">
-                <span className="font-mono text-sm text-acid">&gt;</span>
+              <Screws inset={7} />
+              <div className="flex items-center gap-3 border-b border-panel-line px-6">
                 <input
                   ref={inputRef}
                   value={query}
@@ -210,15 +215,15 @@ export function CommandPalette() {
                   aria-controls="command-list"
                   aria-activedescendant={filtered[activeIndex] ? `command-${filtered[activeIndex].id}` : undefined}
                   aria-autocomplete="list"
-                  placeholder="Type a command or section…"
-                  className="h-14 flex-1 bg-transparent font-mono text-sm text-fg outline-none placeholder:text-dim"
+                  placeholder="Search sections and actions"
+                  className="h-14 flex-1 bg-transparent text-body text-panel-fg outline-none! placeholder:text-panel-dim"
                 />
-                <kbd className="border border-line-strong px-1.5 py-0.5 font-mono text-[10px] text-dim">ESC</kbd>
+                <kbd className="tape text-data">Esc</kbd>
               </div>
 
               <ul ref={listRef} id="command-list" role="listbox" aria-label="Commands" className="max-h-[50vh] overflow-y-auto p-2">
                 {filtered.length === 0 && (
-                  <li role="presentation" className="px-3 py-8 text-center font-mono text-xs text-dim">
+                  <li role="presentation" className="px-3 py-8 text-center text-small text-panel-dim">
                     No matches for “{query}”
                   </li>
                 )}
@@ -229,7 +234,7 @@ export function CommandPalette() {
                   return (
                     <li key={command.id} role="presentation">
                       {header && (
-                        <div className="px-3 pb-1.5 pt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-dim">{header}</div>
+                        <div className="px-3 pb-1 pt-3 text-data font-medium text-panel-dim">{header}</div>
                       )}
                       <div
                         id={`command-${command.id}`}
@@ -238,23 +243,21 @@ export function CommandPalette() {
                         data-index={i}
                         onMouseMove={() => setActiveIndex(i)}
                         onClick={() => void run(command)}
-                        className={`flex cursor-pointer items-center gap-3 border-l-2 px-3 py-2.5 transition-colors ${
-                          active ? "border-acid bg-acid-dim text-fg" : "border-transparent text-fg/80"
+                        className={`flex cursor-pointer items-center gap-3 rounded-[3px] border-l-2 px-3 py-2.5 transition-colors ${
+                          active ? "border-red-hot bg-panel-2 text-panel-fg" : "border-transparent text-panel-dim"
                         }`}
                       >
-                        <span className={`w-6 font-mono text-[11px] ${active ? "text-acid" : "text-dim"}`}>{command.glyph}</span>
-                        <span className="flex-1 text-sm">{command.label}</span>
-                        {command.hint && <span className="truncate font-mono text-[11px] text-dim">{command.hint}</span>}
+                        <span className="flex-1 text-small font-medium">{command.label}</span>
+                        {command.hint && <span className="truncate text-data font-stretch-[80%] text-panel-dim">{command.hint}</span>}
                       </div>
                     </li>
                   );
                 })}
               </ul>
 
-              <div className="flex items-center gap-4 border-t border-line px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-dim">
-                <span>↑↓ Navigate</span>
-                <span>↵ Select</span>
-                <span className="ml-auto hidden sm:inline">⌘K / Ctrl K · / to open</span>
+              <div className="flex items-center gap-4 border-t border-panel-line px-4 py-2.5 text-data text-panel-dim">
+                <span>Arrow keys to move, Enter to select</span>
+                <span className="ml-auto hidden sm:inline">Open with ⌘K, Ctrl K or /</span>
               </div>
             </motion.div>
           </motion.div>
@@ -269,9 +272,9 @@ export function CommandPalette() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 12 }}
-              className="flex items-center gap-2 border border-acid/40 bg-panel px-4 py-2.5 font-mono text-xs text-fg shadow-lg"
+              className="tape flex items-center gap-2 px-4 py-2.5 text-small"
             >
-              <span className="size-1.5 rounded-full bg-acid" /> {toast}
+              <span aria-hidden className="size-2 rounded-full bg-red-hot shadow-[0_0_6px_var(--color-red-hot)]" /> {toast}
             </motion.div>
           )}
         </AnimatePresence>

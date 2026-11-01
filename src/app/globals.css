@@ -1,124 +1,301 @@
 @import "tailwindcss";
 
-:root {
-  --ink: #060708;
-  --ink-2: #0b0d10;
-  --panel: #0f1215;
-  --line: rgb(255 255 255 / 0.08);
-  --line-strong: rgb(255 255 255 / 0.16);
-  --fg: #eceef0;
-  --muted: #8b929b;
-  --dim: #5b626b;
-  --acid: #c8ff3d;
-  --acid-dim: rgb(200 255 61 / 0.14);
-  --cyan: #5ee7ff;
-  --mx: 50%;
-  --my: 30%;
-}
-
-@theme inline {
-  --color-ink: var(--ink);
-  --color-ink-2: var(--ink-2);
-  --color-panel: var(--panel);
-  --color-line: var(--line);
-  --color-line-strong: var(--line-strong);
-  --color-fg: var(--fg);
-  --color-muted: var(--muted);
-  --color-dim: var(--dim);
-  --color-acid: var(--acid);
-  --color-acid-dim: var(--acid-dim);
-  --color-cyan: var(--cyan);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-display);
-}
-
+/*
+ * "Tripped": the site as an electrical installation. A brushed galvanised-steel page,
+ * headings on embossed label tape, dark board enclosures, breaker-red as the only live
+ * colour.
+ *
+ * Contrast rules: `red` is a mark (levers, lamps, busbar, push-button fill with white
+ * text), never text on steel (2.9:1). Use `red-ink` for red text on steel.
+ */
 @theme {
-  --animate-marquee: marquee 40s linear infinite;
-  --animate-pulse-dot: pulse-dot 2s ease-out infinite;
-  --animate-dash: dash 1.6s linear infinite;
-  --animate-blink: blink 1.1s steps(1) infinite;
-  --animate-bus: bus 3.9s linear infinite;
+  /* Galvanised steel page */
+  --color-steel: oklch(0.827 0.006 239.8); /* #C3C7CA */
+  --color-steel-light: oklch(0.855 0.006 239.8); /* #CCD0D3 */
+  --color-steel-dark: oklch(0.748 0.008 241.7); /* #A9AEB2 */
 
-  @keyframes marquee {
-    to {
-      transform: translateX(-50%);
-    }
-  }
-  @keyframes pulse-dot {
-    0% {
-      box-shadow: 0 0 0 0 rgb(200 255 61 / 0.6);
-    }
-    100% {
-      box-shadow: 0 0 0 10px rgb(200 255 61 / 0);
-    }
-  }
-  @keyframes dash {
-    to {
-      stroke-dashoffset: -20;
-    }
-  }
-  @keyframes bus {
+  /* Text on steel */
+  --color-ink: oklch(0.186 0.003 248); /* #121314, 10.9:1 on steel */
+  --color-ink-2: oklch(0.338 0.009 248.1); /* #34383C, 6.95:1 */
+  --color-ink-3: oklch(0.41 0.011 248.1); /* #464B50, 5.18:1 */
+
+  /* Board enclosures */
+  --color-panel: oklch(0.231 0.004 264.5); /* #1C1D1F */
+  --color-panel-2: oklch(0.292 0.005 248); /* #2A2C2E */
+  --color-panel-line: oklch(0.358 0.007 248); /* #3A3D40 */
+  --color-panel-fg: oklch(0.935 0.004 121.6); /* #E9EAE7, 14:1 on panel */
+  --color-panel-dim: oklch(0.706 0.009 248); /* #9CA1A6, 6.5:1 on panel */
+
+  /* Fittings */
+  --color-tape: oklch(0.196 0 89.9); /* #151515 */
+  --color-tape-text: oklch(0.966 0.005 106.5); /* #F4F4F0 */
+  --color-breaker: oklch(0.96 0.005 106.5); /* #F2F2EE */
+  --color-breaker-shade: oklch(0.893 0.008 106.6); /* #DCDCD6 */
+  --color-rail: oklch(0.654 0.009 248); /* #8C9196 */
+  --color-chart: oklch(0.97 0.007 97.4); /* #F6F5F0 */
+  --color-pen: oklch(0.438 0.203 265.9); /* #1D3FBF, chart annotations only */
+  --color-marker: oklch(0.834 0.158 89); /* #F2C230, cable markers */
+
+  /* Live */
+  --color-red: oklch(0.569 0.213 29.1); /* #D8261C, marks only */
+  --color-red-hot: oklch(0.676 0.212 27.8); /* #FF5146, lamps; 5.2:1 on panel */
+  --color-red-ink: oklch(0.444 0.164 29.2); /* #9A1A12, red text on steel, 4.9:1 */
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  /* Fluid type scale: body 17px at 375px to 18px at 1440px */
+  --text-data: clamp(0.8125rem, 0.79rem + 0.094vw, 0.875rem);
+  --text-data--line-height: 1.35;
+  --text-small: clamp(0.9063rem, 0.884rem + 0.094vw, 0.9688rem);
+  --text-small--line-height: 1.5;
+  --text-body: clamp(1.0625rem, 1.04rem + 0.094vw, 1.125rem);
+  --text-body--line-height: 1.55;
+  --text-lede: clamp(1.375rem, 1.21rem + 0.7vw, 1.875rem);
+  --text-lede--line-height: 1.3;
+  --text-h3: clamp(1.375rem, 1.27rem + 0.45vw, 1.625rem);
+  --text-h3--line-height: 1.2;
+  --text-h2: clamp(1.5rem, 1.2rem + 1.3vw, 2.375rem);
+  --text-h2--line-height: 1.1;
+  --text-h1: clamp(2.75rem, 1.3rem + 6.2vw, 6.5rem);
+  --text-h1--line-height: 1.05;
+
+  --ease-spring: cubic-bezier(0.2, 1.5, 0.4, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-lamp: lamp 1.2s ease-in-out infinite alternate;
+  --animate-bus-flow: bus-flow 2.8s linear infinite;
+
+  @keyframes lamp {
     from {
-      left: -10%;
+      box-shadow:
+        0 0 0 2px rgb(216 38 28 / 0.25),
+        0 0 6px var(--color-red-hot);
     }
     to {
-      left: 105%;
+      box-shadow:
+        0 0 0 3px rgb(216 38 28 / 0.35),
+        0 0 14px var(--color-red-hot);
     }
   }
-  @keyframes blink {
-    50% {
-      opacity: 0;
+  @keyframes bus-flow {
+    from {
+      left: -2rem;
+    }
+    to {
+      left: 100%;
     }
   }
 }
 
-html {
-  overflow-x: clip;
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+/* Embossed label-maker tape. Label makers print capitals only; the source text stays in normal case. */
+@utility tape {
+  display: inline-block;
+  background-color: var(--color-tape);
+  color: var(--color-tape-text);
+  font-stretch: 112%;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.18em 0.55em 0.12em;
+  border-radius: 3px;
+  text-shadow:
+    0 1px 0 rgb(0 0 0 / 0.9),
+    0 -1px 0 rgb(255 255 255 / 0.25);
+  box-shadow: 0 2px 0 rgb(0 0 0 / 0.25);
+  rotate: var(--tilt, 0deg);
+}
+
+/* Dark board enclosure. Screws are separate `screw` elements in the corners. */
+@utility enclosure {
+  position: relative;
+  background: linear-gradient(var(--color-panel-2), var(--color-panel));
+  color: var(--color-panel-fg);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 2px var(--color-panel-line),
+    0 18px 40px -20px rgb(0 0 0 / 0.6);
   color-scheme: dark;
+  --focus: var(--color-red-hot);
 }
 
-body {
-  background: var(--ink);
-  color: var(--fg);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+@utility screw {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #e4e6e8, #8b9095);
+  box-shadow: inset 0 0 0 1px #6b7075;
 }
 
-::selection {
-  background: var(--acid);
-  color: var(--ink);
-}
-
-:focus-visible {
-  outline: 2px solid var(--acid);
-  outline-offset: 3px;
+/* Circuit-chart paper, held on with masking tape at two corners */
+@utility chart-paper {
+  position: relative;
+  background-color: var(--color-chart);
+  color: var(--color-ink);
   border-radius: 2px;
+  box-shadow: 0 10px 30px -18px rgb(0 0 0 / 0.5);
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: -12px;
+    width: 88px;
+    height: 24px;
+    background: rgb(236 222 170 / 0.85);
+  }
+  &::before {
+    left: 28px;
+    rotate: -4deg;
+  }
+  &::after {
+    right: 28px;
+    rotate: 3deg;
+  }
 }
 
-@utility grid-lines {
-  background-image:
-    linear-gradient(to right, var(--line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-  background-size: 64px 64px;
+/* Etched aluminium nameplate. Rivets are separate `rivet` elements. */
+@utility rating-plate {
+  position: relative;
+  background: linear-gradient(160deg, #e6e8e9, #cfd3d6 55%, #dadddf);
+  border: 1px solid #8f959a;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 6px 16px -10px rgb(0 0 0 / 0.5);
+  color: var(--color-ink);
 }
 
-@utility hatch {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    rgb(255 255 255 / 0.035) 0 1px,
-    transparent 1px 9px
-  );
+@utility rivet {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, #9aa0a5 70%);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 0.35);
 }
 
-@utility noise {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+/* Yellow heat-shrink cable marker */
+@utility cable-marker {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(var(--color-marker), oklch(0.78 0.15 89));
+  color: var(--color-ink);
+  font-stretch: 80%;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: 0.15em 0.6em;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.45),
+    inset 0 -1px 0 rgb(0 0 0 / 0.15);
 }
 
-@utility text-stroke {
-  -webkit-text-stroke: 1px var(--line-strong);
-  color: transparent;
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    /* Brushed galvanised plate: fine vertical grain over a soft vertical sheen */
+    background:
+      repeating-linear-gradient(90deg, rgb(255 255 255 / 0.05) 0 1px, transparent 1px 3px),
+      linear-gradient(180deg, var(--color-steel-light), var(--color-steel) 40%, oklch(0.8 0.007 240));
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: var(--color-red);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus, var(--color-ink));
+    outline-offset: 2px;
+  }
+}
+
+/* One-shot entrance animations. Elements opt in with a class; scroll triggers add `.in-view`. */
+@keyframes slap {
+  from {
+    opacity: 0;
+    scale: 1.25;
+    filter: blur(2px);
+  }
+}
+@keyframes flicker {
+  0%,
+  30%,
+  50% {
+    opacity: 0.15;
+  }
+  40%,
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes swing-down {
+  from {
+    opacity: 0;
+    transform: rotate(-8deg) translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(var(--rest, -0.4deg));
+  }
+}
+/* Distribution board power-up */
+@keyframes energise {
+  from {
+    scale: 0 1;
+  }
+}
+@keyframes lever-on {
+  from {
+    top: 27px;
+    background: linear-gradient(#fafafa, #cfcfca);
+  }
+  to {
+    top: 3px;
+    background: linear-gradient(var(--color-red-hot), var(--color-red));
+  }
+}
+@keyframes lever-off {
+  from {
+    top: 3px;
+    background: linear-gradient(var(--color-red-hot), var(--color-red));
+  }
+  to {
+    top: 27px;
+    background: linear-gradient(#fafafa, #cfcfca);
+  }
+}
+/* Backoff LED bar graph segment lighting up */
+@keyframes led-on {
+  to {
+    background-color: var(--color-red-hot);
+    box-shadow: 0 0 6px var(--color-red-hot);
+  }
+}
+@keyframes slide-on {
+  from {
+    opacity: 0;
+    translate: -1.5rem 0;
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.8);
+  }
+}
+
+.slap {
+  animation: slap 0.5s var(--ease-spring) both;
+  animation-delay: var(--delay, 0s);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -129,7 +306,15 @@ body {
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-ink-3: var(--color-ink-2);
+    --color-panel-dim: var(--color-panel-fg);
   }
 }
