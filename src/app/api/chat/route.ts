@@ -24,7 +24,9 @@ function isAllowedOrigin(request: Request) {
   const origin = request.headers.get("origin");
   if (!origin || !URL.canParse(origin)) return false;
   const { host } = new URL(origin);
-  if (host === siteUrl.host) return true;
+  // The apex domain redirects to www (or the other way round), so treat both as the site.
+  const bare = (value: string) => value.replace(/^www\./, "");
+  if (bare(host) === bare(siteUrl.host)) return true;
   // Vercel preview deployments and local dev serve from their own hosts.
   return host === process.env.VERCEL_URL || (process.env.NODE_ENV === "development" && host.startsWith("localhost:"));
 }
