@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  experimental: {
+    // Turbopack's persistent cache served the previous globals.css after the theme changed:
+    // Vercel restores .next/cache between deploys and the Tailwind loader output came back stale.
+    turbopackFileSystemCacheForBuild: false,
+    turbopackFileSystemCacheForDev: false,
+  },
   // Hide the dev-only Next.js badge; it sat on top of the page in the bottom-left corner.
   devIndicators: false,
   // The chat route reads the knowledge document from disk at runtime.
