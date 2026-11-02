@@ -25,7 +25,9 @@ function Junction({ lit }: { lit: boolean }) {
       aria-hidden
       className="absolute left-0 top-1 grid size-5 place-items-center rounded-[3px] bg-panel shadow-[inset_0_0_0_1px_var(--color-panel-line)] md:left-[calc(25%-10px)]"
     >
-      <span className={`size-2 rounded-full transition-colors duration-300 ${lit ? "bg-red-hot shadow-[0_0_8px_var(--color-red-hot)]" : "bg-panel-line"}`} />
+      <span
+        className={`size-2 rounded-full transition-colors duration-300 ${lit ? "bg-red-hot shadow-[0_0_8px_var(--color-red-hot)]" : "bg-panel-line"}`}
+      />
     </span>
   );
 }
@@ -38,7 +40,11 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
   const shown = open ? role.highlights : role.highlights.slice(0, PREVIEW);
 
   return (
-    <li ref={ref} id={roleAnchor(role)} className="relative grid scroll-mt-24 gap-3 pl-9 md:grid-cols-12 md:gap-8 md:pl-0">
+    <li
+      ref={ref}
+      id={roleAnchor(role)}
+      className="relative grid scroll-mt-24 gap-3 pl-9 md:grid-cols-12 md:gap-8 md:pl-0"
+    >
       <Junction lit={lit} />
       <div className="md:col-span-3 md:pr-10 md:text-right">
         <p className="text-small font-bold tabular-nums">{dates(role)}</p>
@@ -65,7 +71,9 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
             </div>
             {role.metric && (
               <p className="shrink-0 @lg:text-right">
-                <span className="block text-h3 font-extrabold font-stretch-[85%] text-red-ink">{role.metric.value}</span>
+                <span className="block text-h3 font-extrabold font-stretch-[85%] text-red-ink">
+                  {role.metric.value}
+                </span>
                 <span className="text-small text-ink-2">{role.metric.label}</span>
               </p>
             )}
@@ -73,7 +81,9 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
 
           <p className="mt-4 text-ink-2">{role.blurb}</p>
           {role.contractUntil && (
-            <p className="mt-2 text-small text-ink-3">Then contracted to {role.company} until {role.contractUntil}.</p>
+            <p className="mt-2 text-small text-ink-3">
+              Then contracted to {role.company} until {role.contractUntil}.
+            </p>
           )}
 
           <ul id={bodyId} className="mt-5 max-w-[65ch] space-y-2.5">
@@ -86,7 +96,14 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
           </ul>
 
           {hidden > 0 && (
-            <Button variant="quiet" size="sm" className="mt-3" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls={bodyId}>
+            <Button
+              variant="quiet"
+              size="sm"
+              className="mt-3"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls={bodyId}
+            >
               {open ? "Show less" : `${hidden} more`}
             </Button>
           )}
@@ -121,8 +138,14 @@ export function Timeline() {
     >
       <div ref={ref} className="relative">
         {/* Conduit, with current flowing down it as you scroll */}
-        <div aria-hidden className="absolute bottom-0 left-[7px] top-2 w-1.5 rounded-full bg-panel/80 md:left-[calc(25%-3px)]">
-          <motion.div style={{ scaleY: reduce ? 1 : current }} className="h-full w-full origin-top rounded-full bg-red shadow-[0_0_10px_var(--color-red-hot)]" />
+        <div
+          aria-hidden
+          className="absolute bottom-0 left-[7px] top-2 w-1.5 rounded-full bg-panel/80 md:left-[calc(25%-3px)]"
+        >
+          <motion.div
+            style={{ scaleY: reduce ? 1 : current }}
+            className="h-full w-full origin-top rounded-full bg-red shadow-[0_0_10px_var(--color-red-hot)]"
+          />
         </div>
 
         <ol className="space-y-12 md:space-y-16">

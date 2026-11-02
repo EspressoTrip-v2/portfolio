@@ -36,7 +36,12 @@ export function DistributionBoard() {
   const role = circuits[on];
 
   return (
-    <div data-hero-board className="enclosure px-4 pb-5 pt-7 sm:px-6" role="group" aria-label="Career, one breaker per role">
+    <div
+      data-hero-board
+      className="enclosure px-4 pb-5 pt-7 sm:px-6"
+      role="group"
+      aria-label="Career, one breaker per role"
+    >
       <Screws />
       {/* Main busbar */}
       <span
@@ -75,7 +80,9 @@ export function DistributionBoard() {
                   style={leverAnimation ? ({ animation: leverAnimation } as CSSProperties) : undefined}
                 />
               </span>
-              <span className="mt-2 block text-data font-bold font-stretch-[78%] tabular-nums">{circuit.start.slice(-4)}</span>
+              <span className="mt-2 block text-data font-bold font-stretch-[78%] tabular-nums">
+                {circuit.start.slice(-4)}
+              </span>
               <span className="block text-data font-semibold leading-tight">{shortCompany(circuit.company)}</span>
             </button>
           );
@@ -98,7 +105,10 @@ export function DistributionBoard() {
         <span className="text-small text-panel-dim font-stretch-[85%]">Load</span>
         <span className="text-small">
           {load(role)}{" "}
-          <a href={`#${roleAnchor(role)}`} className="font-semibold text-panel-fg underline decoration-panel-dim decoration-2 underline-offset-4 hover:decoration-red-hot">
+          <a
+            href={`#${roleAnchor(role)}`}
+            className="font-semibold text-panel-fg underline decoration-panel-dim decoration-2 underline-offset-4 hover:decoration-red-hot"
+          >
             Details
           </a>
         </span>

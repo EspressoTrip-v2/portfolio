@@ -43,4 +43,6 @@ next-env.d.ts
 # editor
 /.idea/
 *.iml
-PLAN.md
+
+# plans
+/plans/

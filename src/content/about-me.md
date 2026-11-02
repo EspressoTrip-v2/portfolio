@@ -70,6 +70,7 @@ Juan's background is in electrical engineering. He still approaches software the
 **Company:** A UK marketplace that matches customers with transport providers and uses spare vehicle capacity to cut cost and emissions.
 
 **What he did:**
+
 - Planned a five-stage migration from Nuxt 2 to Nuxt 3 and delivered stage one to production.
 - Began redesigning the repository architecture for the transport-provider and admin front ends, introducing standards to improve developer productivity.
 - Set up CircleCI alerts that report AWS Fargate deployment failures to Slack, reducing production risk and response time.
@@ -83,6 +84,7 @@ Juan's background is in electrical engineering. He still approaches software the
 **Note on dates:** His employment ended in January 2025. He then continued to work on Wyzetalk Next as a contractor until about April 2025, alongside his role at AnyVan.
 
 **Senior Developer (August 2021 – January 2022):** Joined the core platform team and took ownership of the legacy API.
+
 - Rewrote the algorithm that builds the admin dashboard's content tree, cutting load time from 30 seconds to 2 seconds (15× faster).
 - Found and fixed long-standing production bugs that caused data inconsistencies.
 - Introduced a standardised API structure with consistent error handling, and mentored UI developers integrating with it.
@@ -113,6 +115,7 @@ Juan's background is in electrical engineering. He still approaches software the
 ### Earlier career
 
 Before software became his full-time work, Juan held management and product roles abroad:
+
 - **Sport In Life (Dubai, UAE):** Division Manager, and product development for Grit&Tonic.
 - **Carbon Wheels (Qatar):** General Manager.
 - **Salam International (Qatar):** Built heart-rate-variability analysis software for the Abuissa Racing Dakar team, and a client monitoring and training app for Ox Fitness Lab.
@@ -122,32 +125,41 @@ He has worked in three countries (South Africa, UAE, Qatar) and across at least 
 ## Deep dives
 
 ### Event-driven architecture and failure handling
+
 Juan has built event-driven platforms on both RabbitMQ (Wyzetalk) and Kafka (Alpha7x, JourneyApps). His consistent pattern: typed event contracts shared in one package, retries with backoff and dead-letter paths designed in from the start, a separate handling path for optimistic-concurrency version conflicts, and choreography over central orchestration where it fits (for example the Wyzetalk tenant-provisioning saga). At Alpha7x the Kafka equivalents are per-service retry topics and DLQs, and message keys chosen for ordering (for example per loan).
 
 ### Multi-tenancy
+
 He isolates tenants in the architecture rather than relying on query filters: identity realm per tenant, database per tenant, tenant-prefixed Redis keys, and tenant provisioning automated through events. He has applied this at Wyzetalk and again at Alpha7x.
 
 ### Contracts first
+
 Services agree on typed contracts before implementation. At Wyzetalk that meant shared TypeScript event interfaces and OpenAPI specs validated at runtime. At Alpha7x it means Zod schemas that drive both validation and generated OpenAPI, published in a shared package.
 
 ### Observability and cost visibility
+
 He treats metrics, traces and cost data as part of the feature. At JourneyApps he upgraded the Prometheus/Grafana/Tempo/Loki stack, rolled OpenTelemetry upgrades across services, built Prometheus-based usage metering, and built per-cluster/database/client cost attribution from OpenCost and MongoDB Atlas invoices. At Alpha7x services use Datadog APM. Services report ready only when their broker, database and cache are actually ready.
 
 ### Testing
+
 He prefers tests against real engines running in memory (in-memory MongoDB replica sets, Redis Stack) over mocks, because mocks hide the defects that matter. He standardised Vitest and Supertest at Wyzetalk, moved legacy suites to Vitest at JourneyApps, and wrote storage tests that run the same suite against both MongoDB and Postgres in PowerSync.
 
 ### Developer experience
+
 He considers fast local environments a delivery requirement. He built one-command local platforms (Minikube, Skaffold, Docker Compose, Vault, Keycloak) at Wyzetalk and reused the pattern at Alpha7x, and he has written internal CLIs and Pulumi providers to remove manual steps.
 
 ### Infrastructure and platform work
+
 Kubernetes (EKS, AKS, Minikube), Helm, ArgoCD GitOps, Pulumi infrastructure as code (including writing custom providers), Vault and sealed secrets, LinkerD, GitHub Actions and Azure DevOps pipelines. At JourneyApps he led estate-wide upgrades and secret rotation across 50+ repositories.
 
 ### AI in his work
+
 - Added Google Gemini-powered writing assistance to the Wyzetalk content CMS, with safety handling and token settings.
 - At Alpha7x he builds the backend for a platform where AI agents perform mortgage QC checks, including the data contract between the AI task evaluator and the backend.
 - He uses AI coding agents daily and wrote his team's agent guidance and reusable skills so agent output follows team standards.
 
 ### Leadership
+
 He led the Wyzetalk Next rebuild as technical lead and architect, set coding and testing standards for the team, and mentored UI developers. At Alpha7x he leads the backend rebuild, owns the shared contracts that other engineers build against, and picked up and refactored services started by others.
 
 ## Open-source contributions

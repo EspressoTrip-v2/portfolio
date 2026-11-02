@@ -23,6 +23,8 @@ export type Role = {
   caseStudy?: string;
   /** Month a contract with the same company ran to after the employed role ended, e.g. "Apr 2025". */
   contractUntil?: string;
+  /** Extra detail for the CV generator only (not shown on the site). Taken from about-me.md. */
+  cv?: { company?: string; highlights?: string[] };
 };
 
 export type EarlierRole = {
@@ -64,8 +66,7 @@ export const profile = {
   timezone: "Africa/Johannesburg",
   available: true,
   availability: "Open to select opportunities",
-  tagline:
-    "I design and build event-driven backend platforms that are reliable, observable and built to scale.",
+  tagline: "I design and build event-driven backend platforms that are reliable, observable and built to scale.",
   /** Hero line, in the voice of the electrical trade Juan came from. */
   lede: "I design event-driven backend platforms the way I wired boards: know the load, plan for the fault, label every circuit.",
   summary: [
@@ -107,7 +108,30 @@ export const experience: Role[] = [
       "Created @alpha7x/common-ts, the shared ESM contracts package for roles, identity, Kafka topics and error schemas, published to a private Azure Artifacts feed.",
       "Delivering to AKS through ArgoCD GitOps, with a standard Minikube, Skaffold and Docker Compose development environment across services.",
     ],
-    stack: ["TypeScript", "Fastify", "Zod", "Kafka", "MongoDB", "BullMQ", "Redis", "Keycloak", "Datadog", "AKS", "ArgoCD"],
+    stack: [
+      "TypeScript",
+      "Fastify",
+      "Zod",
+      "Kafka",
+      "MongoDB",
+      "BullMQ",
+      "Redis",
+      "Keycloak",
+      "Datadog",
+      "AKS",
+      "ArgoCD",
+    ],
+    cv: {
+      company:
+        "Trust infrastructure for mortgage assets: AI agents run quality-control checks on mortgage loans (post-close QC, appraisal review, post-settlement checks) and people review the evidence.",
+      highlights: [
+        "Built the multi-tenant core platform API on Fastify with a database per tenant, Zod-typed schemas, generated OpenAPI documentation and an internal service-to-service API secured with inter-service JWTs.",
+        "Implemented Keycloak authentication and role-based access control, including programmatic tenant provisioning of identity realms, identity providers and login flows.",
+        "Added real-time progress updates to the UI with Socket.IO and a Redis adapter, authenticated with Keycloak tokens that refresh on long-lived connections.",
+        "Wrote the communication service, which consumes Kafka events and sends templated email through a provider factory, and scaffolded the orders and response services.",
+        "Set engineering standards across services: Vitest with in-memory MongoDB, conventional commits with commitlint and Husky, and shared guidance for AI coding agents.",
+      ],
+    },
   },
   {
     role: "Senior Backend Engineer",
@@ -129,7 +153,18 @@ export const experience: Role[] = [
       "Led platform-wide upgrades across 50+ repositories, covering Node.js and toolchains, an OAuth provider migration, secret rotation, OIDC-based CI authentication, Redis and MongoDB Atlas migrations, and observability upgrades on regional clusters.",
       "Rebuilt the employee access-control service with Slack-based approvals and signed-request verification, and extended the platform's permission-policy APIs.",
     ],
-    stack: ["TypeScript", "Node.js", "MongoDB Atlas", "PostgreSQL", "Kubernetes", "Pulumi", "Prometheus", "Grafana", "OpenTelemetry", "AWS"],
+    stack: [
+      "TypeScript",
+      "Node.js",
+      "MongoDB Atlas",
+      "PostgreSQL",
+      "Kubernetes",
+      "Pulumi",
+      "Prometheus",
+      "Grafana",
+      "OpenTelemetry",
+      "AWS",
+    ],
     metric: { value: "50+", label: "platform repositories" },
   },
   {
@@ -156,8 +191,7 @@ export const experience: Role[] = [
     end: "Jan 2025",
     contractUntil: "Apr 2025",
     location: "Stellenbosch, ZA",
-    blurb:
-      "Award-winning digital employee experience platform for frontline workforces.",
+    blurb: "Award-winning digital employee experience platform for frontline workforces.",
     highlights: [
       "Led the ground-up rebuild of Wyzetalk as Wyzetalk Next: a multi-tenant, event-driven TypeScript platform on RabbitMQ, isolated per tenant from identity realm to database.",
       "Authored the shared platform library underpinning every service: typed publishers and consumers, retry and dead-letter topology, tenant-aware authentication middleware and per-tenant database pools.",
@@ -166,7 +200,18 @@ export const experience: Role[] = [
       "Kept the platform vendor-agnostic through adapter interfaces for email, push, SMS and AI, keeping it portable across Azure, AWS, IBM and GCP.",
       "Standardised testing across the platform with Vitest and Supertest suites that run against in-memory MongoDB replica sets and Redis Stack rather than mocks.",
     ],
-    stack: ["TypeScript", "Express", "MongoDB", "Redis Search", "RedisJSON", "RabbitMQ", "BullMQ", "Keycloak", "Vault", "Kubernetes"],
+    stack: [
+      "TypeScript",
+      "Express",
+      "MongoDB",
+      "Redis Search",
+      "RedisJSON",
+      "RabbitMQ",
+      "BullMQ",
+      "Keycloak",
+      "Vault",
+      "Kubernetes",
+    ],
     metric: { value: "Greenfield", label: "multi-tenant platform rebuild" },
     caseStudy: "#case-study",
   },
@@ -211,8 +256,7 @@ export const experience: Role[] = [
     start: "Jan 2019",
     end: "Aug 2020",
     location: "Eastern Cape, ZA",
-    blurb:
-      "Designed and delivered the company's price-list management platform end to end.",
+    blurb: "Designed and delivered the company's price-list management platform end to end.",
     highlights: [
       "Gave sales managers and directors one tool to create and manage timber price lists, with editing shared across departments.",
       "Added scheduled and pausable price lists for targeted pricing, with automatic emails that send sample price lists to clients.",
@@ -269,18 +313,68 @@ export const caseStudy = {
     { value: "880+", label: "Integration tests" },
   ],
   services: [
-    { name: "public", lane: "edge", role: "Unauthenticated tenant lookup that starts the login flow.", tech: ["Express"] },
+    {
+      name: "public",
+      lane: "edge",
+      role: "Unauthenticated tenant lookup that starts the login flow.",
+      tech: ["Express"],
+    },
     { name: "report", lane: "edge", role: "Public webhook that receives SMS delivery reports.", tech: ["Express"] },
-    { name: "profile", lane: "core", role: "Users and tenants admin, invites, imports and state workflows.", tech: ["Keycloak admin", "Mongoose"] },
-    { name: "content", lane: "core", role: "Post CMS: drafts, approvals, publishing, moderation and AI writing assist.", tech: ["Mongoose", "Gemini"] },
-    { name: "interface", lane: "core", role: "Employee read API: feed, comments, reactions, tags and directory.", tech: ["RedisJSON", "RediSearch"] },
-    { name: "grouping", lane: "core", role: "Audience segmentation engine built on Redis set algebra.", tech: ["Redis", "redis-om", "BullMQ"] },
-    { name: "communication", lane: "core", role: "In-app notification centre with counts and approval actions.", tech: ["Mongoose"] },
+    {
+      name: "profile",
+      lane: "core",
+      role: "Users and tenants admin, invites, imports and state workflows.",
+      tech: ["Keycloak admin", "Mongoose"],
+    },
+    {
+      name: "content",
+      lane: "core",
+      role: "Post CMS: drafts, approvals, publishing, moderation and AI writing assist.",
+      tech: ["Mongoose", "Gemini"],
+    },
+    {
+      name: "interface",
+      lane: "core",
+      role: "Employee read API: feed, comments, reactions, tags and directory.",
+      tech: ["RedisJSON", "RediSearch"],
+    },
+    {
+      name: "grouping",
+      lane: "core",
+      role: "Audience segmentation engine built on Redis set algebra.",
+      tech: ["Redis", "redis-om", "BullMQ"],
+    },
+    {
+      name: "communication",
+      lane: "core",
+      role: "In-app notification centre with counts and approval actions.",
+      tech: ["Mongoose"],
+    },
     { name: "support", lane: "core", role: "Helpdesk tickets bridged to Jira.", tech: ["Mongoose", "Jira"] },
-    { name: "logging", lane: "core", role: "Central log sink and analytics API for users, posts and segments.", tech: ["Winston", "Axiom", "Papertrail"] },
-    { name: "file", lane: "core", role: "Image upload and lifecycle, with per-device variants.", tech: ["Cloudflare Images", "BullMQ"] },
-    { name: "import", lane: "worker", role: "Bulk user import and per-tenant identity realm creation.", tech: ["Keycloak admin", "BullMQ"] },
-    { name: "email", lane: "worker", role: "Templated email delivery behind a provider adapter.", tech: ["AWS SES", "BullMQ"] },
+    {
+      name: "logging",
+      lane: "core",
+      role: "Central log sink and analytics API for users, posts and segments.",
+      tech: ["Winston", "Axiom", "Papertrail"],
+    },
+    {
+      name: "file",
+      lane: "core",
+      role: "Image upload and lifecycle, with per-device variants.",
+      tech: ["Cloudflare Images", "BullMQ"],
+    },
+    {
+      name: "import",
+      lane: "worker",
+      role: "Bulk user import and per-tenant identity realm creation.",
+      tech: ["Keycloak admin", "BullMQ"],
+    },
+    {
+      name: "email",
+      lane: "worker",
+      role: "Templated email delivery behind a provider adapter.",
+      tech: ["AWS SES", "BullMQ"],
+    },
     { name: "push", lane: "worker", role: "Mobile and web push behind a provider adapter.", tech: ["FCM", "BullMQ"] },
     { name: "sms", lane: "worker", role: "SMS delivery behind a provider adapter.", tech: ["HTTP provider", "BullMQ"] },
   ] satisfies Service[],
@@ -292,9 +386,15 @@ export const caseStudy = {
         "Creating a tenant is a choreographed saga. No central orchestrator runs it: each service reacts to an event, does its part and reports back.",
       steps: [
         { actor: "profile", text: "Publishes tenant.create when an operator adds a customer." },
-        { actor: "import", text: "Creates a dedicated Keycloak realm for the tenant and replies with tenant.create-success." },
+        {
+          actor: "import",
+          text: "Creates a dedicated Keycloak realm for the tenant and replies with tenant.create-success.",
+        },
         { actor: "profile", text: "Fans out create-model, add-data and create-index events." },
-        { actor: "6 services", text: "Communication, content, grouping, interface, logging and support each build their per-tenant models and search indexes." },
+        {
+          actor: "6 services",
+          text: "Communication, content, grouping, interface, logging and support each build their per-tenant models and search indexes.",
+        },
       ],
     },
     {
@@ -304,9 +404,18 @@ export const caseStudy = {
         "Posts are stored once and targeted at audience segments. Membership changes are pushed when they happen, so a feed read is one indexed query.",
       steps: [
         { actor: "admin", text: "Defines a segment as AND / OR / NOT rules over employee attributes." },
-        { actor: "grouping", text: "Evaluates the rules with Redis set algebra and diffs the old audience against the new one." },
-        { actor: "workers", text: "Only the subscribe and unsubscribe deltas are published. BullMQ workers update per-user subscription sets in pipelines." },
-        { actor: "interface", text: "Serves the feed with one RediSearch query over the user's segments, sorted by publish date, with full-text search." },
+        {
+          actor: "grouping",
+          text: "Evaluates the rules with Redis set algebra and diffs the old audience against the new one.",
+        },
+        {
+          actor: "workers",
+          text: "Only the subscribe and unsubscribe deltas are published. BullMQ workers update per-user subscription sets in pipelines.",
+        },
+        {
+          actor: "interface",
+          text: "Serves the feed with one RediSearch query over the user's segments, sorted by publish date, with full-text search.",
+        },
       ],
     },
     {
@@ -316,36 +425,59 @@ export const caseStudy = {
         "Every consumer inherits the same failure handling from the shared library. Transient errors back off and recover without manual intervention.",
       steps: [
         { actor: "consumer", text: "Sends a failed message to a TTL retry queue for that attempt." },
-        { actor: "broker", text: "When the TTL expires, a dead-letter exchange routes the message back to the main queue." },
-        { actor: "consumer", text: "Version conflicts from optimistic concurrency take a separate fixed 2 s loop instead." },
-        { actor: "logging", text: "After the last attempt the message is acknowledged and a consumer-error event goes to central logging." },
+        {
+          actor: "broker",
+          text: "When the TTL expires, a dead-letter exchange routes the message back to the main queue.",
+        },
+        {
+          actor: "consumer",
+          text: "Version conflicts from optimistic concurrency take a separate fixed 2 s loop instead.",
+        },
+        {
+          actor: "logging",
+          text: "After the last attempt the message is acknowledged and a consumer-error event goes to central logging.",
+        },
       ],
       backoff: [2, 4, 8, 16, 32],
     },
     {
       id: "import",
       title: "Rate-limited bulk import",
-      summary:
-        "Onboards thousands of employees in one upload without overloading the identity provider.",
+      summary: "Onboards thousands of employees in one upload without overloading the identity provider.",
       steps: [
         { actor: "profile", text: "Accepts the upload and records an import document to track progress." },
-        { actor: "import", text: "Splits identities into chunks of 100 for BullMQ workers, with concurrency caps, rate limits and exponential backoff." },
-        { actor: "keycloak", text: "Creates users in the tenant's own realm, and grouping indexes them for segmentation." },
+        {
+          actor: "import",
+          text: "Splits identities into chunks of 100 for BullMQ workers, with concurrency caps, rate limits and exponential backoff.",
+        },
+        {
+          actor: "keycloak",
+          text: "Creates users in the tenant's own realm, and grouping indexes them for segmentation.",
+        },
         { actor: "profile", text: "Reports identity and segment progress. Failed chunks can be retried from the API." },
       ],
     },
   ] satisfies Flow[],
-  stack: ["TypeScript", "Express", "RabbitMQ", "BullMQ", "MongoDB", "Redis Stack", "Keycloak", "Vault", "Kubernetes", "Skaffold", "Vitest"],
+  stack: [
+    "TypeScript",
+    "Express",
+    "RabbitMQ",
+    "BullMQ",
+    "MongoDB",
+    "Redis Stack",
+    "Keycloak",
+    "Vault",
+    "Kubernetes",
+    "Skaffold",
+    "Vitest",
+  ],
 };
 
 export const principles = [
   {
     title: "Contracts first",
     body: "Services agree on typed contracts before implementation begins. If the compiler rejects a payload on the wrong exchange, it cannot reach production.",
-    evidence: [
-      "Shared typed event contracts at Wyzetalk",
-      "Zod schemas and generated OpenAPI at Alpha7x",
-    ],
+    evidence: ["Shared typed event contracts at Wyzetalk", "Zod schemas and generated OpenAPI at Alpha7x"],
   },
   {
     title: "Design for failure",
@@ -359,11 +491,7 @@ export const principles = [
   {
     title: "Isolate tenants by default",
     body: "Tenant boundaries belong in the architecture, not in query filters that are easy to overlook.",
-    evidence: [
-      "Identity realm per tenant",
-      "Database per tenant",
-      "Tenant-prefixed Redis keys",
-    ],
+    evidence: ["Identity realm per tenant", "Database per tenant", "Tenant-prefixed Redis keys"],
   },
   {
     title: "Observability is part of the feature",
@@ -407,11 +535,39 @@ export const skillGroups = [
   },
   {
     title: "Cloud & Platform",
-    items: ["Kubernetes", "EKS", "AKS", "Helm", "ArgoCD", "LinkerD", "Vault", "Pulumi", "Skaffold", "Minikube", "AWS", "Azure", "IBM Cloud", "GitHub Actions", "CI/CD"],
+    items: [
+      "Kubernetes",
+      "EKS",
+      "AKS",
+      "Helm",
+      "ArgoCD",
+      "LinkerD",
+      "Vault",
+      "Pulumi",
+      "Skaffold",
+      "Minikube",
+      "AWS",
+      "Azure",
+      "IBM Cloud",
+      "GitHub Actions",
+      "CI/CD",
+    ],
   },
   {
     title: "Observability & Identity",
-    items: ["OpenTelemetry", "Prometheus", "Grafana", "Grafana Tempo", "Datadog", "Jaeger", "Sentry", "OpenCost", "Keycloak", "OAuth", "JumpCloud"],
+    items: [
+      "OpenTelemetry",
+      "Prometheus",
+      "Grafana",
+      "Grafana Tempo",
+      "Datadog",
+      "Jaeger",
+      "Sentry",
+      "OpenCost",
+      "Keycloak",
+      "OAuth",
+      "JumpCloud",
+    ],
   },
   {
     title: "Frontend & Quality",

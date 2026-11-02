@@ -31,10 +31,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${archivo.variable} antialiased`}
-    >
+    <html lang="en" className={`${archivo.variable} antialiased`}>
       <body className="min-h-dvh overflow-x-clip text-body">{children}</body>
     </html>
   );

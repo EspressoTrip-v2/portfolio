@@ -1,9 +1,22 @@
 import type { ReactNode } from "react";
 
 /** A big red mushroom push button. Depresses when pressed. */
-export function PushButton({ href, children }: { href: string; children: ReactNode }) {
+export function PushButton({
+  href,
+  external = false,
+  children,
+}: {
+  href: string;
+  /** Opens in a new tab. */
+  external?: boolean;
+  children: ReactNode;
+}) {
   return (
-    <a href={href} className="group inline-flex items-center gap-4">
+    <a
+      href={href}
+      {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+      className="group inline-flex items-center gap-4"
+    >
       <span
         aria-hidden
         className="grid size-20 place-items-center rounded-full bg-[radial-gradient(circle_at_40%_35%,#3a3d40,#1c1d1f)] shadow-[0_8px_18px_-8px_rgb(0_0_0/0.6)]"
@@ -13,6 +26,7 @@ export function PushButton({ href, children }: { href: string; children: ReactNo
       <span className="tape text-body" style={{ ["--tilt" as string]: "-1.5deg" }}>
         {children}
       </span>
+      {external && <span className="sr-only">(opens in a new tab)</span>}
     </a>
   );
 }

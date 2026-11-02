@@ -13,5 +13,7 @@ export function getChatEnv() {
     apiKey: required("CLAUDE_API_KEY"),
     model: required("CLAUDE_MODEL"),
     guardModel: required("CLAUDE_GUARD_MODEL"),
+    /** Model for the CV generator; tailoring benefits from a stronger model than chat. */
+    cvModel: process.env.CV_MODEL || required("CLAUDE_MODEL"),
   };
 }

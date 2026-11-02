@@ -13,7 +13,9 @@ type LinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "className"> & {
 /** Inline text link. The underline turns breaker-red on hover; the arrow appears only on links that leave the site. */
 export function Link({ href, external = false, tone = "steel", className = "", children, ...rest }: LinkProps) {
   const colours =
-    tone === "panel" ? "text-panel-fg decoration-panel-dim hover:decoration-red-hot" : "text-ink decoration-ink-3 hover:decoration-red";
+    tone === "panel"
+      ? "text-panel-fg decoration-panel-dim hover:decoration-red-hot"
+      : "text-ink decoration-ink-3 hover:decoration-red";
   return (
     <a
       href={href}

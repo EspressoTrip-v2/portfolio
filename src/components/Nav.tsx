@@ -39,11 +39,18 @@ export function Nav() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 bg-steel-light transition-[border-color,box-shadow] ${
-        scrolled || open ? "border-b border-steel-dark shadow-[0_6px_16px_-12px_rgb(0_0_0/0.5)]" : "border-b border-transparent"
+        scrolled || open
+          ? "border-b border-steel-dark shadow-[0_6px_16px_-12px_rgb(0_0_0/0.5)]"
+          : "border-b border-transparent"
       }`}
     >
       <nav aria-label="Primary" className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 sm:px-8">
-        <a href="#top" aria-label={`${profile.name}, back to top`} className="tape text-small" style={{ ["--tilt" as string]: "-1deg" }}>
+        <a
+          href="#top"
+          aria-label={`${profile.name}, back to top`}
+          className="tape text-small"
+          style={{ ["--tilt" as string]: "-1deg" }}
+        >
           J. {profile.lastName}
         </a>
 
@@ -86,19 +93,30 @@ export function Nav() {
           >
             <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
             <span aria-hidden className="relative block h-2.5 w-4">
-              <span className={`absolute left-0 h-px w-4 bg-ink transition-all ${open ? "top-1.25 rotate-45" : "top-0"}`} />
-              <span className={`absolute left-0 h-px w-4 bg-ink transition-all ${open ? "top-1.25 -rotate-45" : "top-2.5"}`} />
+              <span
+                className={`absolute left-0 h-px w-4 bg-ink transition-all ${open ? "top-1.25 rotate-45" : "top-0"}`}
+              />
+              <span
+                className={`absolute left-0 h-px w-4 bg-ink transition-all ${open ? "top-1.25 -rotate-45" : "top-2.5"}`}
+              />
             </span>
           </button>
         </div>
       </nav>
 
       {open && (
-        <div id="mobile-menu" className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-steel-dark px-5 pb-6 lg:hidden">
+        <div
+          id="mobile-menu"
+          className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-steel-dark px-5 pb-6 lg:hidden"
+        >
           <ul>
             {sections.map(({ id, label }) => (
               <li key={id}>
-                <a href={`#${id}`} onClick={() => setOpen(false)} className="block border-b border-steel-dark py-3.5 text-h3 font-bold">
+                <a
+                  href={`#${id}`}
+                  onClick={() => setOpen(false)}
+                  className="block border-b border-steel-dark py-3.5 text-h3 font-bold"
+                >
                   {label}
                 </a>
               </li>

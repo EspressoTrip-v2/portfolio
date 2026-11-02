@@ -79,7 +79,12 @@ export function ServiceMap({ services }: { services: Service[] }) {
           {services
             .filter((service) => service.lane === lane)
             .map((service) => (
-              <Module key={service.name} service={service} selected={service.name === current.name} onSelect={() => setSelected(service.name)} />
+              <Module
+                key={service.name}
+                service={service}
+                selected={service.name === current.name}
+                onSelect={() => setSelected(service.name)}
+              />
             ))}
         </div>
       </div>
@@ -106,10 +111,19 @@ export function ServiceMap({ services }: { services: Service[] }) {
         </div>
       </div>
 
-      <div className="mx-3 mb-3 rounded-[4px] bg-panel px-4 py-4 shadow-[inset_0_0_0_1px_var(--color-panel-line)] sm:mx-4 sm:mb-4" aria-live="polite">
+      <div
+        className="mx-3 mb-3 rounded-[4px] bg-panel px-4 py-4 shadow-[inset_0_0_0_1px_var(--color-panel-line)] sm:mx-4 sm:mb-4"
+        aria-live="polite"
+      >
         <MotionConfig reducedMotion="user">
           <AnimatePresence mode="wait" initial={false}>
-            <motion.div key={current.name} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
+            <motion.div
+              key={current.name}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
               <p className="flex items-baseline gap-3">
                 <span className="text-body font-extrabold font-stretch-[85%] text-red-hot">{current.name}</span>
                 <span className="text-small text-panel-dim">{laneOf?.label}</span>
@@ -149,9 +163,7 @@ function BackoffLeds({ seconds }: { seconds: number[] }) {
                     key={k}
                     className="h-3 w-2 rounded-[1px] bg-panel-line"
                     style={
-                      inView
-                        ? ({ animation: `led-on 0.12s linear ${delay}s forwards` } as CSSProperties)
-                        : undefined
+                      inView ? ({ animation: `led-on 0.12s linear ${delay}s forwards` } as CSSProperties) : undefined
                     }
                   />
                 );
@@ -186,7 +198,12 @@ export function FlowTabs({ flows }: { flows: Flow[] }) {
   return (
     <Enclosure>
       {/* Rocker switches */}
-      <div role="tablist" aria-label="Platform flows" onKeyDown={onKeyDown} className="flex gap-2 overflow-x-auto px-5 pb-1 pt-7 sm:px-7">
+      <div
+        role="tablist"
+        aria-label="Platform flows"
+        onKeyDown={onKeyDown}
+        className="flex gap-2 overflow-x-auto px-5 pb-1 pt-7 sm:px-7"
+      >
         {flows.map((item, i) => {
           const selected = item.id === activeId;
           return (
@@ -208,14 +225,22 @@ export function FlowTabs({ flows }: { flows: Flow[] }) {
                   : "bg-panel-2 text-panel-dim shadow-[inset_0_0_0_1px_var(--color-panel-line),0_2px_0_#000] hover:text-panel-fg"
               }`}
             >
-              <span aria-hidden className={`size-2 rounded-full ${selected ? "bg-red-hot shadow-[0_0_6px_var(--color-red-hot)]" : "bg-panel-line"}`} />
+              <span
+                aria-hidden
+                className={`size-2 rounded-full ${selected ? "bg-red-hot shadow-[0_0_6px_var(--color-red-hot)]" : "bg-panel-line"}`}
+              />
               {item.title}
             </button>
           );
         })}
       </div>
 
-      <div role="tabpanel" id={`flow-panel-${flow.id}`} aria-labelledby={`flow-tab-${flow.id}`} className="px-5 pb-7 pt-4 sm:px-7">
+      <div
+        role="tabpanel"
+        id={`flow-panel-${flow.id}`}
+        aria-labelledby={`flow-tab-${flow.id}`}
+        className="px-5 pb-7 pt-4 sm:px-7"
+      >
         <p className="max-w-[65ch] text-pretty">{flow.summary}</p>
         <ol className="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2">
           {flow.steps.map((step, i) => (

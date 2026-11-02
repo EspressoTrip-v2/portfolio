@@ -1,5 +1,4 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { siteUrl } from "@/config/site";
 import { chatCopy, chatLimits } from "@/lib/chat/copy";
 import { getChatEnv } from "@/lib/chat/env";
 import { checkTopic } from "@/lib/chat/guard";
@@ -7,6 +6,7 @@ import { loadAboutMe } from "@/lib/chat/knowledge";
 import { buildSystemPrompt } from "@/lib/chat/prompt";
 import { checkRateLimit, clientIp } from "@/lib/chat/rateLimit";
 import { ChatRequest } from "@/lib/chat/schema";
+import { isAllowedOrigin } from "@/lib/http/origin";
 
 // Runs on the default Node.js runtime (a `runtime` export is not allowed with cacheComponents).
 export const maxDuration = 60;
@@ -18,17 +18,6 @@ function text(body: string, status = 200, headers: Record<string, string> = {}) 
     status,
     headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store", ...headers },
   });
-}
-
-function isAllowedOrigin(request: Request) {
-  const origin = request.headers.get("origin");
-  if (!origin || !URL.canParse(origin)) return false;
-  const { host } = new URL(origin);
-  // The apex domain redirects to www (or the other way round), so treat both as the site.
-  const bare = (value: string) => value.replace(/^www\./, "");
-  if (bare(host) === bare(siteUrl.host)) return true;
-  // Vercel preview deployments and local dev serve from their own hosts.
-  return host === process.env.VERCEL_URL || (process.env.NODE_ENV === "development" && host.startsWith("localhost:"));
 }
 
 export async function POST(request: Request) {
@@ -91,7 +80,10 @@ export async function POST(request: Request) {
         });
       } catch (error) {
         if (request.signal.aborted) return controller.close();
-        console.error("[chat] answer failed", error instanceof Anthropic.APIError ? `${error.status} ${error.name}` : error);
+        console.error(
+          "[chat] answer failed",
+          error instanceof Anthropic.APIError ? `${error.status} ${error.name}` : error,
+        );
         const message = error instanceof Anthropic.RateLimitError ? chatCopy.busy : chatCopy.failure;
         controller.enqueue(encoder.encode(`\n\n${message}`));
       }
@@ -100,6 +92,10 @@ export async function POST(request: Request) {
   });
 
   return new Response(body, {
-    headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
+    },
   });
 }

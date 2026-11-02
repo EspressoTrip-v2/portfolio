@@ -11,13 +11,17 @@ export function CaseStudy() {
   return (
     <Section id="case-study" title={caseStudy.name} tilt={1.2} intro={caseStudy.summary}>
       <p className="-mt-4 mb-10 max-w-[60ch] text-small font-semibold text-ink-2">
-        Technical lead and primary backend author, {caseStudy.period.replace(" – ", " to ")}. The code is private; I&apos;m happy to
-        walk you through it.
+        Technical lead and primary backend author, {caseStudy.period.replace(" – ", " to ")}. The code is private;
+        I&apos;m happy to walk you through it.
       </p>
 
       <div className="grid gap-8 lg:grid-cols-12">
         <div className="lg:col-span-4">
-          <RatingPlate label="Platform specifications" title="Specifications" rows={caseStudy.metrics.map((m) => ({ label: m.label, value: m.value }))} />
+          <RatingPlate
+            label="Platform specifications"
+            title="Specifications"
+            rows={caseStudy.metrics.map((m) => ({ label: m.label, value: m.value }))}
+          />
         </div>
         <div className="min-w-0 lg:col-span-8">
           <ServiceMap services={caseStudy.services} />

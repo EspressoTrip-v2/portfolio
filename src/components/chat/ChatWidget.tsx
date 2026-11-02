@@ -22,7 +22,11 @@ function cornerIsClear() {
   const board = document.querySelector("[data-hero-board]");
   if (!board) return true;
   const r = board.getBoundingClientRect();
-  return !(r.right > window.innerWidth - CORNER.width && r.bottom > window.innerHeight - CORNER.height && r.top < window.innerHeight);
+  return !(
+    r.right > window.innerWidth - CORNER.width &&
+    r.bottom > window.innerHeight - CORNER.height &&
+    r.top < window.innerHeight
+  );
 }
 
 function readFlag(key: string) {
@@ -96,7 +100,9 @@ function AnswerText({ text, caret }: { text: string; caret: boolean }) {
   }
 
   // A steady CH1 block while the answer streams.
-  const caretEl = caret ? <span aria-hidden className="ml-0.5 inline-block h-3.5 w-[6px] translate-y-0.5 bg-red-hot" /> : null;
+  const caretEl = caret ? (
+    <span aria-hidden className="ml-0.5 inline-block h-3.5 w-[6px] translate-y-0.5 bg-red-hot" />
+  ) : null;
   if (blocks.length === 0) return <p className="text-small">{caretEl}</p>;
 
   return (
@@ -360,7 +366,12 @@ export function ChatWidget() {
                   key="greeting"
                   role="status"
                   initial={{ opacity: 0, y: 30, scale: 0.8 }}
-                  animate={{ opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 380, damping: 16, delay: 0.35 } }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    transition: { type: "spring", stiffness: 380, damping: 16, delay: 0.35 },
+                  }}
                   exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.12 } }}
                   style={{ transformOrigin: "100% 100%", ["--tilt" as string]: "-2deg" }}
                   className="tape relative max-w-[17rem] py-2.5! pl-3.5! pr-9! text-small normal-case! tracking-normal! font-stretch-100%!"
@@ -384,16 +395,24 @@ export function ChatWidget() {
               aria-haspopup="dialog"
               aria-label="Ask about Juan"
               layout
-              initial={{ opacity: 0, y: 40, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 420, damping: 18 } }}
-              className={`enclosure flex min-h-12 items-center gap-3 text-body font-bold active:translate-y-0.5 ${roomy ? "px-5" : "min-w-12 justify-center px-0"}`}
+              initial={{ opacity: 0, y: 80, scale: 0.6 }}
+              animate={{ opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 380, damping: 11 } }}
+              className="rounded-[6px] [--focus:var(--color-red-hot)] active:translate-y-0.5"
             >
-              <motion.span layout aria-hidden className={`size-3.5 rounded-full bg-red-hot ${calling ? "animate-lamp" : ""}`} />
-              {roomy && (
-                <motion.span layout="position" aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  Ask about Juan
+              {/* The wobble lives on an inner wrapper so it doesn't fight motion's layout transform on the button. */}
+              <span
+                className={`enclosure flex min-h-12 items-center gap-3 text-body font-bold animate-ring ${roomy ? "px-5" : "min-w-12 justify-center px-0"}`}
+              >
+                <motion.span layout aria-hidden className="relative grid size-3.5 place-items-center">
+                  {calling && <span className="absolute inset-0 rounded-full bg-red-hot opacity-0 animate-ripple" />}
+                  <span className={`relative size-3.5 rounded-full bg-red-hot ${calling ? "animate-lamp" : ""}`} />
                 </motion.span>
-              )}
+                {roomy && (
+                  <motion.span layout="position" aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    Ask about Juan
+                  </motion.span>
+                )}
+              </span>
             </motion.button>
           </motion.div>
         )}
@@ -436,7 +455,8 @@ export function ChatWidget() {
               {entries.length === 0 ? (
                 <div className="space-y-4">
                   <p className="max-w-[34ch] text-small text-panel-dim">
-                    Hi! I can tell you about Juan&apos;s work, skills and experience. Pick a question below or ask your own.
+                    Hi! I can tell you about Juan&apos;s work, skills and experience. Pick a question below or ask your
+                    own.
                   </p>
                   <ul className="space-y-1.5">
                     {starters.map((starter) => (
@@ -465,10 +485,16 @@ export function ChatWidget() {
                   const live = streaming && i === entries.length - 1;
                   const { text, links } = parseAnswer(entry.content, live);
                   return (
-                    <div key={i} className={`border-l-2 pl-3.5 ${entry.notice ? "border-red-hot" : "border-panel-line"}`}>
+                    <div
+                      key={i}
+                      className={`border-l-2 pl-3.5 ${entry.notice ? "border-red-hot" : "border-panel-line"}`}
+                    >
                       <AnswerText text={text} caret={live} />
                       {entry.notice && (
-                        <a href={profile.links.email.href} className="mt-2 inline-block text-small text-red-hot underline underline-offset-4">
+                        <a
+                          href={profile.links.email.href}
+                          className="mt-2 inline-block text-small text-red-hot underline underline-offset-4"
+                        >
                           Email Juan
                         </a>
                       )}
@@ -495,7 +521,10 @@ export function ChatWidget() {
               )}
             </div>
 
-            <form onSubmit={onSubmit} className="border-t border-panel-line px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
+            <form
+              onSubmit={onSubmit}
+              className="border-t border-panel-line px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3"
+            >
               <div className="flex items-end gap-2 rounded-[4px] border border-panel-line bg-panel-2 px-3 py-2 focus-within:border-red-hot">
                 <label htmlFor="chat-input" className="sr-only">
                   Your question

@@ -83,9 +83,23 @@ export function CommandPalette() {
         },
       },
       { id: "github", group: "Links", label: "GitHub", hint: github.handle, run: () => openExternal(github.href) },
-      { id: "linkedin", group: "Links", label: "LinkedIn", hint: linkedin.handle, run: () => openExternal(linkedin.href) },
+      {
+        id: "linkedin",
+        group: "Links",
+        label: "LinkedIn",
+        hint: linkedin.handle,
+        run: () => openExternal(linkedin.href),
+      },
       ...(featured
-        ? [{ id: "featured", group: "Links" as const, label: featured.name, hint: "GitHub repo", run: () => openExternal(featured.href) }]
+        ? [
+            {
+              id: "featured",
+              group: "Links" as const,
+              label: featured.name,
+              hint: "GitHub repo",
+              run: () => openExternal(featured.href),
+            },
+          ]
         : []),
     ];
   }, [notify]);
@@ -93,7 +107,9 @@ export function CommandPalette() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return commands;
-    return commands.filter((command) => `${command.label} ${command.group} ${command.hint ?? ""}`.toLowerCase().includes(q));
+    return commands.filter((command) =>
+      `${command.label} ${command.group} ${command.hint ?? ""}`.toLowerCase().includes(q),
+    );
   }, [commands, query]);
 
   const show = useCallback(() => {
@@ -221,7 +237,13 @@ export function CommandPalette() {
                 <kbd className="tape text-data">Esc</kbd>
               </div>
 
-              <ul ref={listRef} id="command-list" role="listbox" aria-label="Commands" className="max-h-[50vh] overflow-y-auto p-2">
+              <ul
+                ref={listRef}
+                id="command-list"
+                role="listbox"
+                aria-label="Commands"
+                className="max-h-[50vh] overflow-y-auto p-2"
+              >
                 {filtered.length === 0 && (
                   <li role="presentation" className="px-3 py-8 text-center text-small text-panel-dim">
                     No matches for “{query}”
@@ -233,9 +255,7 @@ export function CommandPalette() {
                   const active = i === activeIndex;
                   return (
                     <li key={command.id} role="presentation">
-                      {header && (
-                        <div className="px-3 pb-1 pt-3 text-data font-medium text-panel-dim">{header}</div>
-                      )}
+                      {header && <div className="px-3 pb-1 pt-3 text-data font-medium text-panel-dim">{header}</div>}
                       <div
                         id={`command-${command.id}`}
                         role="option"
@@ -248,7 +268,9 @@ export function CommandPalette() {
                         }`}
                       >
                         <span className="flex-1 text-small font-medium">{command.label}</span>
-                        {command.hint && <span className="truncate text-data font-stretch-[80%] text-panel-dim">{command.hint}</span>}
+                        {command.hint && (
+                          <span className="truncate text-data font-stretch-[80%] text-panel-dim">{command.hint}</span>
+                        )}
                       </div>
                     </li>
                   );
@@ -274,7 +296,8 @@ export function CommandPalette() {
               exit={{ opacity: 0, y: 12 }}
               className="tape flex items-center gap-2 px-4 py-2.5 text-small"
             >
-              <span aria-hidden className="size-2 rounded-full bg-red-hot shadow-[0_0_6px_var(--color-red-hot)]" /> {toast}
+              <span aria-hidden className="size-2 rounded-full bg-red-hot shadow-[0_0_6px_var(--color-red-hot)]" />{" "}
+              {toast}
             </motion.div>
           )}
         </AnimatePresence>

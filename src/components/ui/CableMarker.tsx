@@ -16,7 +16,10 @@ export function MarkerList({ items, label }: { items: string[]; label: string })
             className="cable-marker relative text-data before:absolute before:-left-3 before:top-1/2 before:h-1 before:w-3 before:-translate-y-1/2 before:bg-ink/80"
             style={
               inView
-                ? ({ animation: "slide-on 0.45s var(--ease-out) both", animationDelay: `${i * 0.04}s` } as CSSProperties)
+                ? ({
+                    animation: "slide-on 0.45s var(--ease-out) both",
+                    animationDelay: `${i * 0.04}s`,
+                  } as CSSProperties)
                 : { opacity: 0 }
             }
           >
