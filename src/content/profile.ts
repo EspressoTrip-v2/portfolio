@@ -86,8 +86,8 @@ export const profile = {
     },
     linkedin: {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/juanb-14b1b6138",
-      handle: "in/juanb-14b1b6138",
+      href: "https://www.linkedin.com/in/juan-b-14b1b6138",
+      handle: "in/juan-b-14b1b6138",
     },
   } satisfies Record<string, Link>,
 };

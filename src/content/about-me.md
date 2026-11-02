@@ -15,7 +15,7 @@ This document is the knowledge base for the "Ask about Juan" assistant on Juan's
 - **Contact:**
   - Email: juanbo.home@gmail.com
   - GitHub: https://github.com/EspressoTrip-v2 (handle EspressoTrip-v2)
-  - LinkedIn: https://www.linkedin.com/in/juanb-14b1b6138
+  - LinkedIn: https://www.linkedin.com/in/juan-b-14b1b6138
 
 Juan's background is in electrical engineering. He still approaches software the same way: understand the load, design for failure, and document every circuit.
 
