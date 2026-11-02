@@ -201,7 +201,7 @@ He came to software from electrical engineering and management roles, and has bu
 ## Employer FAQ
 
 - **What kind of role is he looking for?** He is open to select opportunities. His strengths are senior or lead backend and platform roles: event-driven, multi-tenant TypeScript or Go systems, platform rebuilds, and infrastructure/observability work. For specifics, contact Juan.
-- **Where is he based and can he work remotely?** He is based in Plettenberg Bay, South Africa (UTC+2) and has worked with teams in South Africa, the UK and the US. For questions about remote, hybrid or relocation arrangements, contact Juan directly.
+- **Where is he based and can he work remotely?** He is based in Plettenberg Bay, South Africa (UTC+2) and has worked with teams in South Africa, the UK and the US. He prefers remote work. For hybrid or relocation arrangements, contact Juan directly.
 - **Has he led teams?** Yes. He was technical lead and architect for the Wyzetalk Next rebuild and currently leads the backend rebuild at Alpha7x.
 - **Does he do frontend?** He can (Nuxt migration at AnyVan, React and Electron work earlier), but his focus and strongest experience are backend and platform.
 - **Salary, notice period, start date:** Not covered here. Contact Juan.
