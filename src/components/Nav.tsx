@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { navSections, sections } from "@/content/navigation";
 import { profile } from "@/content/profile";
 import { CV_FILE_NAME, CV_PDF_PATH } from "@/lib/cv/file";
@@ -25,7 +25,20 @@ function useActiveSection() {
   return active;
 }
 
+const noSubscribe = () => () => {};
+const isMac = () => /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+
+/** The palette shortcut as the visitor's keyboard labels it. The server render assumes a Mac. */
+function useShortcutLabel() {
+  return useSyncExternalStore(
+    noSubscribe,
+    () => (isMac() ? "⌘K" : "Ctrl K"),
+    () => "⌘K",
+  );
+}
+
 export function Nav() {
+  const shortcut = useShortcutLabel();
   const active = useActiveSection();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -45,11 +58,15 @@ export function Nav() {
           : "border-b border-transparent"
       }`}
     >
-      <nav aria-label="Primary" className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 sm:px-8">
+      {/* At lg a three-column grid keeps the links centred on the page whatever the side widths. */}
+      <nav
+        aria-label="Primary"
+        className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr]"
+      >
         <a
           href="#top"
           aria-label={`${profile.name}, back to top`}
-          className="tape text-small"
+          className="tape text-small lg:justify-self-start"
           style={{ ["--tilt" as string]: "-1deg" }}
         >
           J. {profile.lastName}
@@ -80,14 +97,15 @@ export function Nav() {
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
-          <Button size="sm" variant="primary" href={CV_PDF_PATH} download={CV_FILE_NAME}>
+        <div className="flex items-center gap-2 lg:justify-self-end">
+          {/* Secondary, so the hero's Download CV stays the one red button in the first screen. */}
+          <Button size="sm" href={CV_PDF_PATH} download={CV_FILE_NAME} className="max-lg:min-h-10">
             CV
             <span className="sr-only">: download as PDF</span>
           </Button>
           <Button size="sm" onClick={openCommandPalette} className="max-sm:hidden!">
             Jump to
-            <kbd className="rounded-[3px] bg-ink px-1.5 text-data font-bold text-tape-text">⌘K</kbd>
+            <kbd className="rounded-[3px] bg-ink px-1.5 text-data font-bold text-tape-text">{shortcut}</kbd>
           </Button>
           <button
             type="button"

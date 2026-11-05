@@ -12,7 +12,7 @@ export function Principles() {
     <Section
       id="principles"
       title="Circuit chart"
-      subtitle="Engineering principles"
+      eyebrow="Engineering principles"
       tilt={-1.4}
       intro="How I build, written the way every board I wired was documented: the circuit, what it feeds, and the proof it holds."
     >

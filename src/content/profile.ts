@@ -61,28 +61,31 @@ export type Flow = {
   backoff?: number[];
 };
 
+/** Where Juan is based. The display strings below and the JSON-LD address are all built from this. */
+const address = { locality: "Plettenberg Bay", region: "Western Cape", country: "ZA", countryName: "South Africa" };
+
 export const profile = {
   name: "Juan Botha",
   firstName: "Juan",
   lastName: "Botha",
   title: "Lead Backend Engineer",
-  location: "Plettenberg Bay, Western Cape, ZA",
+  location: `${address.locality}, ${address.region}, ${address.countryName}`,
+  address,
   timezone: "Africa/Johannesburg",
   available: true,
   availability: "Open to select opportunities",
-  /** Shown under the title in the hero and at the top of the CV. */
+  /** Shown in the hero legend's Work row and at the top of the CV. */
   workMode: "Remote · UTC+2",
   notice: "1 month's notice",
-  /** Core stack, shown on the hero's plain first line and the share image. */
+  /** Core stack, shown in the hero legend's Stack row and on the share image. */
   stack: ["TypeScript", "Node.js", "Kafka", "MongoDB", "Kubernetes"],
   experienceYears: "12+ yrs",
-  /** Structured address for search engines. Keep in step with `location`. */
-  address: { locality: "Plettenberg Bay", region: "Western Cape", country: "ZA" },
-  /** Practical terms agencies ask about. Shown in Quick facts and answered by the chat assistant. */
+  /** Practical terms agencies ask about, shown on About's Working terms plate. The chat assistant answers from about-me.md. */
   terms: {
-    engagement: "Permanent, contractor (B2B), fixed-term or via an Employer of Record",
-    rightToWork: "South African citizen; works remotely for overseas companies via contractor or EOR arrangements",
-    rate: "Salary or rate band on request",
+    // U+2011 non-breaking hyphen keeps "fixed‑term" on one line.
+    engagement: "Permanent, B2B contract, fixed\u2011term or EOR",
+    rightToWork: "South African citizen; remote via B2B or EOR",
+    rate: "On request",
     response: "I reply within 24 hours (UTC+2)",
   },
   tagline: "I design and build event-driven backend platforms that are reliable, observable and built to scale.",

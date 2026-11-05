@@ -85,7 +85,7 @@ export const factBank = buildFactBank();
 export const cvIdentity = {
   name: profile.name,
   title: profile.title,
-  location: profile.location.replace(", ZA", ", South Africa"),
+  location: profile.location,
   workLine: [profile.workMode, profile.available ? profile.availability : undefined, profile.notice]
     .filter(Boolean)
     .join(" · "),

@@ -36,7 +36,7 @@ export function Contact() {
 
         <footer className="mt-[clamp(4rem,8vw,6rem)] flex flex-col gap-3 border-t-2 border-steel-dark pb-28 pt-8 text-small text-ink-3 sm:flex-row sm:items-center sm:justify-between">
           <span>© {profile.name}</span>
-          <span>{profile.location.replace(", ZA", ", South Africa")}</span>
+          <span>{profile.location}</span>
           <a
             href="#top"
             className="font-semibold underline decoration-2 underline-offset-4 hover:text-ink hover:decoration-red"

@@ -134,8 +134,9 @@ export function Timeline() {
   return (
     <Section
       id="journey"
-      title="From switchboards to service meshes"
-      subtitle="Experience"
+      // Non-breaking space: "meshes" never ends up alone on the tape's second line.
+      title={"From switchboards to service\u00a0meshes"}
+      eyebrow="Experience"
       tilt={0.8}
       intro="My career began in the electrical trade and continued through business management in the Gulf before moving into software. Since then I have built multi-tenant platforms and multi-region sync infrastructure, and I currently lead a backend platform rebuild at Alpha7x."
     >

@@ -36,8 +36,9 @@ export function RatingPlate({
             key={i}
             className="flex items-baseline justify-between gap-6 border-b border-[#a8aeb2] py-2 last:border-b-0"
           >
-            <dt className="text-small text-ink-2">{row.label}</dt>
-            <dd className="text-right font-bold font-stretch-[85%] tabular-nums">{row.value}</dd>
+            {/* The label never wraps or shrinks; a long value wraps instead. */}
+            <dt className="shrink-0 whitespace-nowrap text-small text-ink-2">{row.label}</dt>
+            <dd className="text-right font-bold font-stretch-[85%] text-pretty tabular-nums">{row.value}</dd>
           </div>
         ))}
       </dl>

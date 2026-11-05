@@ -83,7 +83,7 @@ export default async function OpenGraphImage() {
           <Tape text={profile.lastName} tilt={0.9} size={92} />
         </div>
         <div style={{ display: "flex", marginTop: 18, fontSize: 30, fontWeight: 500, color: ink2 }}>
-          {`${profile.title}, ${profile.location.replace(", ZA", ", South Africa")}`}
+          {`${profile.title}, ${profile.location}`}
         </div>
       </div>
 
