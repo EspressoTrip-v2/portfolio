@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CvGenerator } from "@/components/cv/CvGenerator";
 import { Tape } from "@/components/ui/Tape";
-import { baseCv } from "@/lib/cv/assemble";
 import { cvEnabled } from "@/lib/cv/enabled";
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ export default function CvPage() {
       <p className="mt-5 max-w-[60ch] text-body text-ink-2 text-pretty">
         Paste the job spec to get Juan&apos;s CV for the role as a PDF.
       </p>
-      <CvGenerator standard={baseCv()} />
+      <CvGenerator />
     </main>
   );
 }

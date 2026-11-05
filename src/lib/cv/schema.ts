@@ -47,6 +47,14 @@ export const TailorOutput = z.object({
 
 export type TailorOutput = z.infer<typeof TailorOutput>;
 
+/** The repair pass's answer: only the roles it rewrote (each with its full bullet list), and the summary if changed. */
+export const RepairOutput = z.object({
+  summary: z.object({ text: z.string(), sources: z.array(z.string()) }).nullable(),
+  roles: TailorOutput.shape.roles,
+});
+
+export type RepairOutput = z.infer<typeof RepairOutput>;
+
 export type CvBullet = { text: string; sources: string[] };
 
 export type CvRole = {
@@ -89,18 +97,24 @@ export type CvKeyword = { term: string; matched: boolean };
 /** A bullet that failed verification and was replaced by its original text. */
 export type Reverted = { roleId: string; attempted: string; reason: string };
 
-/** Dev-only report of what the rewrite changed, so Juan can check every line against its source. */
+/** Report of what the rewrite changed, shown on Juan's passcode-locked page, so he can check every line against its source. */
 export type CvChanges = {
   summary: { text: string; originals: string[] };
   roles: { roleId: string; label: string; bullets: { text: string; originals: string[]; rewritten: boolean }[] }[];
   reverted: Reverted[];
   /** The spec's keywords: whether Juan has each one, and whether it now appears in the CV text. */
   keywords: { term: string; matched: boolean; inCv: boolean }[];
+  /** The model that wrote the CV and its effort, e.g. "claude-opus-5-5 · effort high". */
+  writtenBy: string;
+  /** What the repair pass did: not needed, skipped for time, failed, or ran (with keyword coverage before and after). */
+  repair:
+    | { status: "not-needed" | "skipped" | "failed" }
+    | { status: "ran"; kept: boolean; coveredBefore: number; coveredAfter: number };
 };
 
 /** Progress stages the API streams while it works, then the result or an error. */
-export type CvStage = "reading" | "rewording" | "checking";
+export type CvStage = "reading" | "rewording" | "checking" | "repairing";
 export type CvEvent =
   | { type: "stage"; stage: CvStage }
-  | { type: "result"; cv: TailoredCv; changes?: CvChanges }
+  | { type: "result"; cv: TailoredCv; changes: CvChanges }
   | { type: "error"; message: string };

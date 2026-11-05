@@ -3,6 +3,7 @@ import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 import { profile } from "@/content/profile";
 import { originalBullets } from "./assemble";
+import { EQUIVALENTS } from "./equivalents";
 import { factBank } from "./factBank";
 import { FAITHFULNESS_PROMPT } from "./prompt";
 import { type CvBullet, type CvKeyword, cvLimits, type Reverted, type TailorOutput } from "./schema";
@@ -102,6 +103,11 @@ function mentions(text: string, term: string) {
   return new RegExp(`(^|[^A-Za-z0-9])${escape(term)}($|[^A-Za-z0-9+#])`).test(text);
 }
 
+/** The sources support a technology when they name it, or a specific technology that implies it. */
+function supports(sourceText: string, term: string) {
+  return mentions(sourceText, term) || (EQUIVALENTS[term] ?? []).some((specific) => mentions(sourceText, specific));
+}
+
 /** Numbers as written, e.g. "50+", "12", "2", "30". */
 function numbers(text: string) {
   return text.match(/\d+(?:[.,]\d+)?/g) ?? [];
@@ -122,7 +128,7 @@ function checkClaim(text: string, sources: string[], allowedRoleId: string | und
   const newNumber = numbers(text).find((number) => !sourceNumbers.has(number));
   if (newNumber) return `adds the number ${newNumber}`;
 
-  const newTech = vocabulary.find((term) => mentions(text, term) && !mentions(sourceText, term));
+  const newTech = vocabulary.find((term) => mentions(text, term) && !supports(sourceText, term));
   if (newTech) return `adds ${newTech}`;
   return undefined;
 }
@@ -132,20 +138,23 @@ const Verdict = z.object({
 });
 
 /**
- * Second pass with the cheap model: flags rewritten sentences that claim more than their
+ * Second pass with the guard model: flags rewritten sentences that claim more than their
  * sources. Throws on failure; the caller fails the request rather than ship unchecked text.
+ * `context` (the role's stack, or Juan's known skills) is shown apart from the facts: it lets a
+ * claim name a technology, never credit it with a result the facts don't tie to it.
  */
 async function checkFaithfulness(
   client: Anthropic,
   model: string,
-  claims: { text: string; sources: string[]; extra?: string }[],
+  claims: { text: string; sources: string[]; context: string }[],
+  retries: number,
 ) {
   if (claims.length === 0) return new Map<number, string>();
   const body = claims
     .map((claim, i) => {
       const cited = claim.sources.flatMap((id) => factBank.factById.get(id)?.text ?? []);
-      const facts = [...cited, ...(claim.extra ? [claim.extra] : [])].map((text) => `- ${text}`).join("\n");
-      return `<claim n="${i + 1}">\n<rewritten>${claim.text}</rewritten>\n<facts>\n${facts}\n</facts>\n</claim>`;
+      const facts = cited.map((text) => `- ${text}`).join("\n");
+      return `<claim n="${i + 1}">\n<rewritten>${claim.text}</rewritten>\n<facts>\n${facts}\n</facts>\n<context>${claim.context}</context>\n</claim>`;
     })
     .join("\n\n");
 
@@ -157,7 +166,7 @@ async function checkFaithfulness(
       output_config: { effort: "low", format: zodOutputFormat(Verdict) },
       messages: [{ role: "user", content: body }],
     },
-    { timeout: 30_000, maxRetries: 1 },
+    { timeout: 30_000, maxRetries: retries },
   );
   console.info("[cv] faithfulness", {
     stop: response.stop_reason,
@@ -173,7 +182,14 @@ async function checkFaithfulness(
  * Turns the model's draft into content that is safe to print. Anything that fails a check is
  * replaced by Juan's original wording, so a failure falls back to the real CV, never to invented text.
  */
-export async function verifyDraft(client: Anthropic, guardModel: string, draft: TailorOutput) {
+export async function verifyDraft(
+  client: Anthropic,
+  guardModel: string,
+  draft: TailorOutput,
+  // One retry by default, so a transient error doesn't throw away a finished draft. The repair
+  // pass passes 0 to stay inside the time budget; its failure just keeps the first CV.
+  retries = 1,
+) {
   const knownSkillsLine = `Skills Juan has used: ${factBank.skills.join(", ")}.`;
   const reverted: Reverted[] = [];
   const knownSkills = new Map(factBank.skills.map((skill) => [skill.toLowerCase(), skill]));
@@ -214,10 +230,15 @@ export async function verifyDraft(client: Anthropic, guardModel: string, draft: 
 
   // 3. Model check on everything that passed the deterministic checks
   const claims = [
-    { key: "summary", index: -1, text: summary, sources: summarySources, extra: knownSkillsLine },
-    ...[...bullets].flatMap(([roleId, list]) => list.map((bullet, index) => ({ key: roleId, index, ...bullet }))),
+    { key: "summary", index: -1, text: summary, sources: summarySources, context: knownSkillsLine },
+    // A bullet may name its role's stack (the deterministic check allows it), so the model sees it too.
+    ...[...bullets].flatMap(([roleId, list]) => {
+      const stack = factBank.roles.find((role) => role.id === roleId)?.stack ?? [];
+      const context = `Technologies used in this role: ${stack.join(", ")}.`;
+      return list.map((bullet, index) => ({ key: roleId, index, ...bullet, context }));
+    }),
   ].filter((claim) => !(claim.sources.length === 1 && factBank.factById.get(claim.sources[0])?.text === claim.text));
-  const flagged = await checkFaithfulness(client, guardModel, claims);
+  const flagged = await checkFaithfulness(client, guardModel, claims, retries);
   for (const [i, reason] of flagged) {
     const claim = claims[i];
     if (!claim) continue;

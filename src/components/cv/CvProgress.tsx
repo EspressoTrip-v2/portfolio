@@ -2,16 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { Screws } from "@/components/ui/Enclosure";
+import type { CvStage } from "@/lib/cv/schema";
 
-export type ProgressStage = "reading" | "rewording" | "checking" | "building";
+/** The server's stages, plus the browser's own PDF build. */
+export type ProgressStage = CvStage | "building";
 
 // Each stage fills its share of the bar, easing towards the end of its share over its usual duration.
 // The server reports real stage changes; the easing only fills the time in between.
 const STAGES: { id: ProgressStage; label: string; from: number; to: number; seconds: number }[] = [
-  { id: "reading", label: "Reading the job spec", from: 0, to: 6, seconds: 1 },
-  { id: "rewording", label: "Looking up Juan's experience", from: 6, to: 72, seconds: 24 },
-  { id: "checking", label: "Preparing the CV", from: 72, to: 92, seconds: 7 },
-  { id: "building", label: "Preparing the PDF", from: 92, to: 100, seconds: 2 },
+  { id: "reading", label: "Reading the job spec", from: 0, to: 4, seconds: 1 },
+  { id: "rewording", label: "Rewriting the CV for the spec", from: 4, to: 58, seconds: 90 },
+  { id: "checking", label: "Checking every line against the facts", from: 58, to: 70, seconds: 10 },
+  { id: "repairing", label: "Fixing failed lines and missing keywords", from: 70, to: 94, seconds: 50 },
+  { id: "building", label: "Preparing the PDF", from: 94, to: 100, seconds: 2 },
 ];
 const SEGMENTS = 30;
 

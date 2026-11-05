@@ -1,40 +1,57 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { getChatEnv } from "@/lib/chat/env";
 import { checkRateLimit, clientIp } from "@/lib/chat/rateLimit";
 import { hasCvAccess } from "@/lib/cv/access";
 import { assembleCv } from "@/lib/cv/assemble";
 import { cvEnabled } from "@/lib/cv/enabled";
-import { buildTailorPrompt } from "@/lib/cv/prompt";
-import { buildChanges } from "@/lib/cv/changes";
-import { type CvEvent, CvRequest, cvLimits, TailorOutput } from "@/lib/cv/schema";
+import { buildChanges, coveredCount, keywordCoverage } from "@/lib/cv/changes";
+import { type CvChanges, type CvEvent, CvRequest, cvLimits, type Reverted, type TailorOutput } from "@/lib/cv/schema";
+import { REPAIR_EFFORT, repairDraft, type Writer, writeDraft } from "@/lib/cv/tailor";
 import { verifyDraft } from "@/lib/cv/verify";
 import { isAllowedOrigin } from "@/lib/http/origin";
 
 // Runs on the default Node.js runtime (a `runtime` export is not allowed with cacheComponents).
 // Opus at high effort can take a few minutes to write a full CV.
 export const maxDuration = 300;
-/** Leaves room for the checking pass (up to about a minute with its retry) inside maxDuration. */
-const TAILOR_DEADLINE_MS = 225_000;
+// Time budget inside maxDuration: the first draft must finish by 180 s. The repair pass runs only
+// if it gets at least 30 s and must finish by 260 s, leaving room for its 30 s check.
+const TAILOR_DEADLINE_MS = 180_000;
+const REPAIR_BUDGET_END_MS = 260_000;
+const MIN_REPAIR_MS = 30_000;
 
 let client: Anthropic | undefined;
 
-/** The model's JSON, or undefined when it was cut short, refused or doesn't match the schema. */
-function parseDraft(response: Anthropic.Beta.BetaMessage) {
-  if (response.stop_reason !== "end_turn") return undefined;
-  const text = response.content.flatMap((block) => (block.type === "text" ? [block.text] : [])).join("");
-  try {
-    const result = TailorOutput.safeParse(JSON.parse(text));
-    if (!result.success) console.error("[cv] draft does not match the schema", result.error.issues.slice(0, 3));
-    return result.success ? result.data : undefined;
-  } catch {
-    console.error("[cv] draft is not valid JSON", { length: text.length });
-    return undefined;
-  }
-}
-
 function error(message: string, status: number, headers: Record<string, string> = {}) {
   return Response.json({ error: message }, { status, headers: { "Cache-Control": "no-store", ...headers } });
+}
+
+/**
+ * The repair pass and its check. Any failure or timeout returns a status instead of throwing (except when Juan disconnects):
+ * the first verified CV still stands, so a failed repair never costs Juan his CV.
+ */
+async function tryRepair(
+  writer: Writer,
+  clientSignal: AbortSignal,
+  guardModel: string,
+  ...args: [jobSpec: string, draft: TailorOutput, reverted: Reverted[], missing: string[]]
+) {
+  try {
+    const { draft, model } = await repairDraft(writer, ...args);
+    if (!draft) return { status: "failed" as const };
+    // No retry here: the repair runs late in the time budget, and failing just keeps the first CV.
+    const verified = await verifyDraft(writer.client, guardModel, draft, 0);
+    return { status: "ran" as const, verified, model };
+  } catch (cause) {
+    // Juan left: rethrow so the route closes quietly instead of reporting to nobody.
+    if (clientSignal.aborted) throw cause;
+    // Only an abort from the repair's own time limit counts as out of time, not a later guard error.
+    if (cause instanceof Anthropic.APIUserAbortError && writer.signal.aborted) {
+      console.warn("[cv] repair skipped: out of time");
+      return { status: "skipped" as const };
+    }
+    console.error("[cv] repair failed", cause instanceof Anthropic.APIError ? `${cause.status} ${cause.name}` : cause);
+    return { status: "failed" as const };
+  }
 }
 
 /** Tailors Juan's CV to a pasted job spec. Passcode-locked; see src/lib/cv/enabled.ts and access.ts. */
@@ -75,62 +92,77 @@ export async function POST(request: Request) {
 
   // Newline-delimited JSON: progress stages while the CV is being written, then the result.
   const encoder = new TextEncoder();
+  const startedAt = Date.now();
   const deadline = AbortSignal.timeout(TAILOR_DEADLINE_MS);
+  const writer: Writer = { client: anthropic, model: env.cvModel, signal: AbortSignal.any([request.signal, deadline]) };
   const body = new ReadableStream<Uint8Array>({
     async start(controller) {
       const send = (event: CvEvent) => controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
       try {
         send({ type: "stage", stage: "reading" });
         send({ type: "stage", stage: "rewording" });
-        // Streamed so a long high-effort run can't hit an HTTP timeout; only the final message is used.
-        // `fallbacks: "default"` re-runs a safety-classifier decline on a suitable model in the same call.
-        const response = await anthropic.beta.messages
-          .stream(
-            {
-              model: env.cvModel,
-              max_tokens: 32_000,
-              betas: ["server-side-fallback-2026-07-01"],
-              fallbacks: "default",
-              system: [{ type: "text", text: buildTailorPrompt(), cache_control: { type: "ephemeral" } }],
-              output_config: { effort: env.cvEffort, format: betaZodOutputFormat(TailorOutput) },
-              messages: [{ role: "user", content: `<job_spec>\n${jobSpec}\n</job_spec>` }],
-            },
-            // One deadline for the whole stream, leaving time for the checking pass before maxDuration.
-            { signal: AbortSignal.any([request.signal, deadline]), maxRetries: 0 },
-          )
-          .finalMessage();
-        console.info("[cv] tailor", {
-          model: response.model,
-          stop: response.stop_reason,
-          blocks: response.content.map((block) => block.type),
-          input: response.usage.input_tokens,
-          cacheRead: response.usage.cache_read_input_tokens,
-          output: response.usage.output_tokens,
-        });
-        const draft = parseDraft(response);
+        const { output: draft, model } = await writeDraft(writer, env.cvEffort, jobSpec);
         if (!draft) {
           send({ type: "error", message: "Couldn't get the CV for that job spec. Try again." });
           return controller.close();
         }
+        let writtenBy = `${model} · effort ${env.cvEffort}`;
 
         send({ type: "stage", stage: "checking" });
-        const verified = await verifyDraft(anthropic, env.guardModel, draft);
+        let verified = await verifyDraft(anthropic, env.cvGuardModel, draft);
         // The phone number only goes on CVs returned behind the passcode, never on public pages.
-        const cv = assembleCv(verified, { includePhone: true });
-        // Keyword match and the change report are for Juan only: server logs, and the page in dev.
+        let cv = assembleCv(verified, { includePhone: true });
+        let repair: CvChanges["repair"] = { status: "not-needed" };
+
+        // Repair pass: fix lines that failed a check and work in keywords Juan has that are missing.
+        const coverage = keywordCoverage(cv, verified.keywords);
+        const missing = coverage.filter((keyword) => keyword.matched && !keyword.inCv).map((keyword) => keyword.term);
+        const repairMs = REPAIR_BUDGET_END_MS - (Date.now() - startedAt);
+        if (verified.reverted.length > 0 || missing.length > 0) {
+          if (repairMs < MIN_REPAIR_MS) {
+            repair = { status: "skipped" };
+          } else {
+            send({ type: "stage", stage: "repairing" });
+            const result = await tryRepair(
+              { ...writer, signal: AbortSignal.any([request.signal, AbortSignal.timeout(repairMs)]) },
+              request.signal,
+              env.cvGuardModel,
+              jobSpec,
+              draft,
+              verified.reverted,
+              missing,
+            );
+            if (result.status !== "ran") {
+              repair = result;
+            } else {
+              const repairedCv = assembleCv(result.verified, { includePhone: true });
+              const before = coveredCount(coverage);
+              const after = coveredCount(keywordCoverage(repairedCv, result.verified.keywords));
+              // Keep the repaired CV when it covers more keywords, or as many with fewer lines put back.
+              const kept =
+                after > before || (after === before && result.verified.reverted.length < verified.reverted.length);
+              repair = { status: "ran", kept, coveredBefore: before, coveredAfter: after };
+              if (kept) {
+                verified = result.verified;
+                cv = repairedCv;
+                writtenBy += ` (repair: ${result.model} · effort ${REPAIR_EFFORT})`;
+              }
+            }
+          }
+        }
+
         console.info("[cv] keywords", {
           matched: verified.keywords.filter((keyword) => keyword.matched).map((keyword) => keyword.term),
           missing: verified.keywords.filter((keyword) => !keyword.matched).map((keyword) => keyword.term),
+          repair,
         });
         if (verified.reverted.length > 0) console.info("[cv] reverted", verified.reverted);
-        const changes =
-          process.env.NODE_ENV === "development"
-            ? buildChanges(cv, verified.summarySources, verified.reverted, verified.keywords)
-            : undefined;
-        send({ type: "result", cv, changes });
+        // The page is passcode-locked, so Juan sees the full change report there.
+        send({ type: "result", cv, changes: buildChanges(cv, verified, { writtenBy, repair }) });
       } catch (cause) {
         if (request.signal.aborted) return controller.close();
-        if (deadline.aborted) {
+        // Only an abort caused by the deadline counts as "too long", not any error after 180 s.
+        if (cause instanceof Anthropic.APIUserAbortError && deadline.aborted) {
           console.error("[cv] deadline", { ms: TAILOR_DEADLINE_MS });
           send({ type: "error", message: "That took too long. Try again." });
           return controller.close();

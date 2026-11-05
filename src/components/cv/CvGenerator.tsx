@@ -50,14 +50,17 @@ async function* readEvents(response: Response) {
   }
 }
 
-/** Paste a job spec, get Juan's CV for the role. The PDF shown is the PDF that downloads. */
-export function CvGenerator({ standard }: { standard: TailoredCv }) {
+/**
+ * Paste a job spec, get Juan's CV for the role. Before submitting, only the form shows; afterwards,
+ * the change report, the download and a preview. The PDF shown is the PDF that downloads.
+ */
+export function CvGenerator() {
   const [spec, setSpec] = useState("");
   // The server render has no storage, so it starts empty and the client fills in the remembered value.
   const remembered = useSyncExternalStore(onPasscodeChange, loadPasscode, () => "");
   const [typed, setPasscode] = useState<string>();
   const passcode = typed ?? remembered;
-  const [cv, setCv] = useState(standard);
+  const [cv, setCv] = useState<TailoredCv>();
   const [changes, setChanges] = useState<Changes>();
   const [stage, setStage] = useState<ProgressStage>();
   const [error, setError] = useState<string>();
@@ -67,8 +70,9 @@ export function CvGenerator({ standard }: { standard: TailoredCv }) {
   const tooLong = length > cvLimits.maxSpecChars;
   const busy = stage !== undefined;
 
-  // Render whichever CV is current (the general one first, then the one for the spec) to a PDF.
+  // Render the CV prepared for the spec to a PDF.
   useEffect(() => {
+    if (!cv) return;
     let cancelled = false;
     let url: string | undefined;
     renderCvPdf(cv)
@@ -94,6 +98,10 @@ export function CvGenerator({ standard }: { standard: TailoredCv }) {
     event.preventDefault();
     if (tooShort || tooLong || busy) return;
     setError(undefined);
+    // A new spec replaces the last result, so an old CV is never downloaded by mistake.
+    setCv(undefined);
+    setChanges(undefined);
+    setPdf(undefined);
     setStage("reading");
     try {
       const response = await fetch("/api/cv", {
@@ -180,20 +188,9 @@ export function CvGenerator({ standard }: { standard: TailoredCv }) {
               ? `${length.toLocaleString("en-GB")} / at least ${cvLimits.minSpecChars} characters`
               : `${length.toLocaleString("en-GB")} / ${cvLimits.maxSpecChars.toLocaleString("en-GB")} characters`}
           </p>
-          <div className="flex flex-wrap gap-3">
-            <Button type="submit" disabled={tooShort || tooLong || busy}>
-              {busy ? "Getting CV…" : "Get CV"}
-            </Button>
-            {pdf && !busy ? (
-              <Button href={pdf.url} download={pdf.fileName} variant="secondary">
-                Download CV
-              </Button>
-            ) : (
-              <Button type="button" variant="secondary" disabled>
-                Download CV
-              </Button>
-            )}
-          </div>
+          <Button type="submit" disabled={tooShort || tooLong || busy}>
+            {busy ? "Getting CV…" : "Get CV"}
+          </Button>
         </div>
         {error && (
           <p role="alert" className="text-small text-red-ink">
@@ -204,20 +201,28 @@ export function CvGenerator({ standard }: { standard: TailoredCv }) {
 
       {stage && <CvProgress stage={stage} />}
 
-      {process.env.NODE_ENV === "development" && changes && !busy && <CvChanges changes={changes} />}
+      {changes && !busy && <CvChanges changes={changes} />}
 
-      <section aria-label="CV preview">
-        {pdf ? (
-          <iframe
-            key={pdf.url}
-            src={`${pdf.url}#view=FitH`}
-            title={`CV preview: ${pdf.fileName}`}
-            className="h-[85vh] w-full rounded-[2px] border border-ink-3/40 bg-white shadow-[0_10px_30px_-18px_rgb(0_0_0/0.5)]"
-          />
-        ) : (
-          <p className="text-small text-ink-2">Preparing the CV preview…</p>
-        )}
-      </section>
+      {pdf && !busy && (
+        <Button href={pdf.url} download={pdf.fileName} variant="primary">
+          Download CV (PDF)
+        </Button>
+      )}
+
+      {cv && (
+        <section aria-label="CV preview">
+          {pdf ? (
+            <iframe
+              key={pdf.url}
+              src={`${pdf.url}#view=FitH`}
+              title={`CV preview: ${pdf.fileName}`}
+              className="h-[85vh] w-full rounded-[2px] border border-ink-3/40 bg-white shadow-[0_10px_30px_-18px_rgb(0_0_0/0.5)]"
+            />
+          ) : (
+            <p className="text-small text-ink-2">Preparing the CV preview…</p>
+          )}
+        </section>
+      )}
     </div>
   );
 }

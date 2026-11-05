@@ -93,8 +93,21 @@ function KeywordCoverage({ keywords }: { keywords: Changes["keywords"] }) {
   );
 }
 
+/** One line on the repair pass: whether it ran, and what it did to keyword coverage. */
+function RepairNote({ repair }: { repair: Changes["repair"] }) {
+  const text =
+    repair.status === "ran"
+      ? `${repair.kept ? "kept" : "discarded, no improvement"} (keywords ${repair.coveredBefore} → ${repair.coveredAfter})`
+      : {
+          "not-needed": "not needed",
+          skipped: "out of time, first CV kept",
+          failed: "failed, first CV kept",
+        }[repair.status];
+  return <p className="text-data text-ink-3">Repair pass: {text}.</p>;
+}
+
 /**
- * Dev only: every rewritten line with what it was rewritten from, and the lines that failed the
+ * Juan's report: every rewritten line with what it was rewritten from, and the lines that failed the
  * checks and went back to the original wording. Added words are highlighted, removed words struck out.
  */
 export function CvChanges({ changes }: { changes: Changes }) {
@@ -102,9 +115,12 @@ export function CvChanges({ changes }: { changes: Changes }) {
   return (
     <details open className="chart-paper px-5 py-6 text-small sm:px-8">
       <summary className="cursor-pointer font-bold">
-        What changed (dev only): {rewritten.length} rewritten line{rewritten.length === 1 ? "" : "s"},{" "}
-        {changes.reverted.length} put back
+        What changed: {rewritten.length} rewritten line{rewritten.length === 1 ? "" : "s"}, {changes.reverted.length}{" "}
+        put back
       </summary>
+
+      <p className="mt-3 text-data text-ink-2">Written by {changes.writtenBy}</p>
+      <RepairNote repair={changes.repair} />
 
       <KeywordCoverage keywords={changes.keywords} />
 

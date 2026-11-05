@@ -6,7 +6,8 @@ function required(name: string) {
   return value;
 }
 
-type Effort = NonNullable<Anthropic.Beta.BetaOutputConfig["effort"]>;
+/** Effort levels the API accepts. */
+export type Effort = NonNullable<Anthropic.Beta.BetaOutputConfig["effort"]>;
 const efforts = ["low", "medium", "high", "xhigh", "max"] as const satisfies readonly Effort[];
 
 /** `CV_EFFORT`, defaulting to high. A set but unknown value fails loudly rather than silently becoming high. */
@@ -28,6 +29,8 @@ export function getChatEnv() {
     guardModel: required("CLAUDE_GUARD_MODEL"),
     /** Model for the CV generator; tailoring benefits from the strongest model. */
     cvModel: process.env.CV_MODEL || "claude-opus-5-5",
+    /** Model that checks each CV line against its facts. Stronger than the chat guard: a false rejection costs a keyword. */
+    cvGuardModel: process.env.CV_GUARD_MODEL || "claude-sonnet-5-5",
     /** Effort for the CV generator. Opus 5.5 defaults to medium, so it is set explicitly. */
     cvEffort: cvEffort(process.env.CV_EFFORT),
   };
