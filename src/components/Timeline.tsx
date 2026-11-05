@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
 import { useRef, useState } from "react";
-import { earlier, experience, type Role } from "@/content/profile";
+import { earlier, earlierNote, experience, type Role } from "@/content/profile";
 import { useInView } from "@/lib/useInView";
 import { roleAnchor } from "./DistributionBoard";
 import { Section } from "./Section";
@@ -49,6 +49,7 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
       <div className="md:col-span-3 md:pr-10 md:text-right">
         <p className="text-small font-bold tabular-nums">{dates(role)}</p>
         <p className="text-small text-ink-3">{role.location}</p>
+        {role.engagement && <p className="text-small text-ink-3">{role.engagement}</p>}
       </div>
 
       <article className="@container md:col-span-9 md:ml-4">
@@ -59,6 +60,7 @@ function RoleCard({ role, index }: { role: Role; index: number }) {
           <header className="flex flex-col gap-3 @lg:flex-row @lg:items-start @lg:justify-between">
             <div>
               <h3 className="text-h3 font-bold">{role.role}</h3>
+              {role.team && <p className="mt-1 text-small font-semibold text-ink-2">{role.team}</p>}
               {role.links && role.links.length > 0 && (
                 <p className="mt-1 flex flex-wrap gap-x-4">
                   {role.links.map((link) => (
@@ -133,6 +135,7 @@ export function Timeline() {
     <Section
       id="journey"
       title="From switchboards to service meshes"
+      subtitle="Experience"
       tilt={0.8}
       intro="My career began in the electrical trade and continued through business management in the Gulf before moving into software. Since then I have built multi-tenant platforms and multi-region sync infrastructure, and I currently lead a backend platform rebuild at Alpha7x."
     >
@@ -186,6 +189,7 @@ export function Timeline() {
                   </li>
                 ))}
               </ul>
+              <p className="mt-4 text-small text-ink-2">{earlierNote}</p>
             </div>
           </li>
         </ol>

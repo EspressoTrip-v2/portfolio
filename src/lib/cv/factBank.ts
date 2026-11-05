@@ -5,7 +5,7 @@ export type Fact = {
   id: string;
   /** The role the fact belongs to; undefined for summary and project facts. */
   roleId?: string;
-  kind: "summary" | "blurb" | "highlight" | "metric" | "project";
+  kind: "summary" | "blurb" | "highlight" | "metric" | "team" | "project";
   text: string;
 };
 
@@ -18,6 +18,8 @@ export type CvRoleRecord = {
   end: string;
   contractUntil?: string;
   location: string;
+  engagement?: string;
+  team?: string;
   stack: string[];
   /** Highlights in their original order: the untailored bullets. */
   highlightIds: string[];
@@ -37,6 +39,7 @@ function buildFactBank() {
   for (const role of experience) {
     const id = roleId(role);
     facts.push({ id: `${id}.blurb`, roleId: id, kind: "blurb", text: role.cv?.company ?? role.blurb });
+    if (role.team) facts.push({ id: `${id}.team`, roleId: id, kind: "team", text: role.team });
     if (role.metric) {
       facts.push({ id: `${id}.metric`, roleId: id, kind: "metric", text: `${role.metric.value} ${role.metric.label}` });
     }
@@ -53,6 +56,8 @@ function buildFactBank() {
       end: role.end,
       contractUntil: role.contractUntil,
       location: role.location,
+      engagement: role.engagement,
+      team: role.team,
       stack: role.stack,
       highlightIds,
     });
@@ -81,6 +86,9 @@ export const cvIdentity = {
   name: profile.name,
   title: profile.title,
   location: profile.location.replace(", ZA", ", South Africa"),
+  workLine: [profile.workMode, profile.available ? profile.availability : undefined, profile.notice]
+    .filter(Boolean)
+    .join(" · "),
   email: profile.links.email.handle,
   github: profile.links.github.href,
   linkedin: profile.links.linkedin.href,

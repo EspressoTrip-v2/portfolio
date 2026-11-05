@@ -1,6 +1,8 @@
 import { profile } from "@/content/profile";
+import { CV_FILE_NAME, CV_PDF_PATH } from "@/lib/cv/file";
 import { DistributionBoard } from "./DistributionBoard";
 import { Button } from "./ui/Button";
+import { Link } from "./ui/Link";
 import { Tape } from "./ui/Tape";
 
 export function Hero() {
@@ -22,20 +24,29 @@ export function Hero() {
             <p className="mt-7 text-body font-semibold font-stretch-[88%] text-ink-2 lg:mt-0">
               {profile.title}, {profile.location.replace(", ZA", ", South Africa")}
             </p>
+            <p className="mt-1 text-small font-semibold text-ink-2">
+              {profile.workMode} · {profile.notice}
+            </p>
             {profile.available && (
               <p className="mt-2 flex items-center gap-2.5 text-small font-semibold">
                 <span aria-hidden className="size-3 animate-lamp rounded-full bg-red-hot" />
                 {profile.availability}
               </p>
             )}
-            <p className="mt-5 max-w-[34ch] text-lede font-medium text-pretty">{profile.lede}</p>
+            <p className="mt-5 text-body font-bold font-stretch-[88%]">
+              {[...profile.stack, profile.experienceYears].join(" · ")}
+            </p>
+            <p className="mt-3 max-w-[34ch] text-lede font-medium text-pretty">{profile.lede}</p>
 
             <div className="mt-7 flex flex-wrap gap-3">
-              <Button variant="primary" href={profile.links.email.href}>
-                Email me
+              <Button variant="primary" href={CV_PDF_PATH} download={CV_FILE_NAME}>
+                Download CV (PDF)
               </Button>
-              <Button href="#case-study">Read the case study</Button>
+              <Button href={profile.links.email.href}>Email me</Button>
             </div>
+            <p className="mt-4">
+              <Link href="#case-study">Read the case study</Link>
+            </p>
           </div>
         </div>
 

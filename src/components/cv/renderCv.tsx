@@ -13,6 +13,3 @@ export async function renderCvPdf(cv: TailoredCv) {
   registerCvFonts(origin);
   return pdf(<CvDocument cv={cv} photoUrl={`${origin}/juan.jpg`} />).toBlob();
 }
-
-/** Always the same neutral name, whichever job spec the CV was prepared for. */
-export const CV_FILE_NAME = "Juan-Botha-CV.pdf";

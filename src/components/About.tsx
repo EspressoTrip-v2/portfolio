@@ -13,10 +13,15 @@ export function About() {
     ...(current ? [{ label: "Working on", value: `${current.role}, ${current.company}` }] : []),
     { label: "Trade qualification", value: `${trade.name}, ${trade.period.replace(" – ", " to ")}` },
     { label: "Languages", value: languages.map((l) => `${l.name} (${l.level.toLowerCase()})`).join(", ") },
+    { label: "Works", value: profile.workMode },
+    { label: "Notice", value: profile.notice },
+    { label: "Engagement", value: profile.terms.engagement },
+    { label: "Right to work", value: profile.terms.rightToWork },
+    { label: "Rate", value: profile.terms.rate },
   ];
 
   return (
-    <Section id="about" title="Engineer by trade" tilt={-1.2}>
+    <Section id="about" title="Engineer by trade" subtitle="About me" tilt={-1.2}>
       <div className="grid gap-12 lg:grid-cols-12">
         <div className="space-y-5 lg:col-span-7">
           {profile.summary.map((paragraph) => (

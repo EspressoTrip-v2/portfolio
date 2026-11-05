@@ -1,4 +1,5 @@
 import { profile } from "@/content/profile";
+import { CV_FILE_NAME, CV_PDF_PATH } from "@/lib/cv/file";
 import { PushButton } from "./ui/PushButton";
 import { Tape } from "./ui/Tape";
 
@@ -12,11 +13,15 @@ export function Contact() {
           Get in touch
         </Tape>
         <p className="mt-6 max-w-[48ch] text-lede font-medium text-pretty">
-          Email is the fastest way to reach me. The assistant in the corner can answer quick questions about my work.
+          Email is the fastest way to reach me, and {profile.terms.response}. The assistant in the corner can answer
+          quick questions about my work.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-6">
           <PushButton href={email.href}>Email Juan</PushButton>
+          <PushButton href={CV_PDF_PATH} download={CV_FILE_NAME}>
+            Download CV (PDF)
+          </PushButton>
           <PushButton href={github.href} external>
             GitHub
           </PushButton>

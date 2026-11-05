@@ -55,6 +55,10 @@ export type CvRole = {
   company: string;
   dates: string;
   location: string;
+  /** Employment type, e.g. "Permanent · Remote". */
+  engagement?: string;
+  /** Team Juan led, e.g. "Led a team of 7+ engineers". */
+  team?: string;
   /** One line about the company, verbatim from profile.ts. */
   blurb: string;
   bullets: CvBullet[];
@@ -65,12 +69,16 @@ export type TailoredCv = {
   name: string;
   title: string;
   location: string;
+  /** Work mode, availability and notice, e.g. "Remote · UTC+2 · Open to select opportunities · 1 month's notice". */
+  workLine: string;
   /** Phone comes from the CV_PHONE env var so it never lives in the repo; omitted when unset. */
   contact: { email: string; phone?: string; github: string; linkedin: string };
   summary: string;
   skills: string[];
   roles: CvRole[];
   earlier: { company: string; location: string; roles: string[] }[];
+  /** Software work alongside the earlier roles, e.g. "Freelance and own-business software work, 2013–2018". */
+  earlierNote: string;
   education: { name: string; issuer: string; period: string }[];
   languages: { name: string; level: string }[];
   portfolio: { name: string; href: string; description: string }[];

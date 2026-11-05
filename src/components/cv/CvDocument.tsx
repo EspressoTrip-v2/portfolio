@@ -21,16 +21,19 @@ const c = {
 
 let fontsRegistered = false;
 
-/** Registers the CV font from /public. Call once before rendering, in the browser. */
-export function registerCvFonts(origin: string) {
+/**
+ * Registers the CV font. Call once before rendering. `publicBase` is where /public is reachable:
+ * the site origin in the browser, or the public directory's path on the server.
+ */
+export function registerCvFonts(publicBase: string) {
   if (fontsRegistered) return;
   Font.register({
     family: "Archivo",
     fonts: [
-      { src: `${origin}/fonts/cv/archivo-latin-400-normal.woff`, fontWeight: 400 },
-      { src: `${origin}/fonts/cv/archivo-latin-400-italic.woff`, fontWeight: 400, fontStyle: "italic" },
-      { src: `${origin}/fonts/cv/archivo-latin-600-normal.woff`, fontWeight: 600 },
-      { src: `${origin}/fonts/cv/archivo-latin-800-normal.woff`, fontWeight: 800 },
+      { src: `${publicBase}/fonts/cv/archivo-latin-400-normal.woff`, fontWeight: 400 },
+      { src: `${publicBase}/fonts/cv/archivo-latin-400-italic.woff`, fontWeight: 400, fontStyle: "italic" },
+      { src: `${publicBase}/fonts/cv/archivo-latin-600-normal.woff`, fontWeight: 600 },
+      { src: `${publicBase}/fonts/cv/archivo-latin-800-normal.woff`, fontWeight: 800 },
     ],
   });
   // Whole words only; hyphenated tech names read badly.
@@ -61,8 +64,10 @@ const s = StyleSheet.create({
     borderRadius: 3,
     transform: "rotate(-1.2deg)",
   },
-  nameText: { color: c.tapeText, fontSize: 25, fontWeight: 800, letterSpacing: 2.2, lineHeight: 1 },
+  // Little letter spacing: wider gaps make text extraction (ATS screening) split the name into fragments.
+  nameText: { color: c.tapeText, fontSize: 25, fontWeight: 800, letterSpacing: 0.5, lineHeight: 1 },
   title: { fontSize: 12.5, fontWeight: 600, color: c.ink2, marginTop: 9 },
+  workLine: { fontSize: 8.4, fontWeight: 600, color: c.ink3, marginTop: 3 },
   photoWrap: { width: 70, height: 70, position: "relative" },
   photo: { width: 70, height: 70, borderWidth: 1, borderColor: c.ink },
   photoTape: {
@@ -107,7 +112,7 @@ const s = StyleSheet.create({
     marginTop: 16,
     marginBottom: 8,
   },
-  sectionText: { color: c.tapeText, fontSize: 9.5, fontWeight: 800, letterSpacing: 1.4, lineHeight: 1 },
+  sectionText: { color: c.tapeText, fontSize: 9.5, fontWeight: 800, letterSpacing: 0, lineHeight: 1 },
 
   markers: { flexDirection: "row", flexWrap: "wrap" },
   marker: {
@@ -146,6 +151,7 @@ const s = StyleSheet.create({
   companyRow: { flexDirection: "row", justifyContent: "space-between", marginTop: 1 },
   company: { fontSize: 9.2, fontWeight: 600, color: c.ink2 },
   location: { fontSize: 7.8, color: c.ink3 },
+  roleMeta: { fontSize: 7.8, fontWeight: 600, color: c.ink2, marginTop: 1 },
   blurb: { fontSize: 7.8, fontStyle: "italic", color: c.ink3, marginTop: 1.5, marginBottom: 3 },
   bullet: { flexDirection: "row", marginBottom: 2.2 },
   bulletMark: { width: 3, height: 3, backgroundColor: c.red, marginTop: 3.8, marginRight: 6 },
@@ -218,6 +224,7 @@ export function CvDocument({ cv, photoUrl }: { cv: TailoredCv; photoUrl: string 
               <Text style={s.nameText}>{cv.name.toUpperCase()}</Text>
             </View>
             <Text style={s.title}>{cv.title}</Text>
+            <Text style={s.workLine}>{cv.workLine}</Text>
           </View>
           <View style={s.photoWrap}>
             {/* eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image has no alt prop */}
@@ -274,6 +281,9 @@ export function CvDocument({ cv, photoUrl }: { cv: TailoredCv; photoUrl: string 
                   <Text style={s.company}>{role.company}</Text>
                   <Text style={s.location}>{role.location}</Text>
                 </View>
+                {(role.engagement || role.team) && (
+                  <Text style={s.roleMeta}>{[role.engagement, role.team].filter(Boolean).join(" · ")}</Text>
+                )}
                 <Text style={s.blurb}>{role.blurb}</Text>
               </View>
             </View>
@@ -294,6 +304,7 @@ export function CvDocument({ cv, photoUrl }: { cv: TailoredCv; photoUrl: string 
                 <Text style={s.itemSub}>{entry.roles.join("; ")}</Text>
               </View>
             ))}
+            <Text style={s.itemSub}>{cv.earlierNote}</Text>
           </View>
           <View style={s.column}>
             <SectionTape tilt={1}>Education</SectionTape>

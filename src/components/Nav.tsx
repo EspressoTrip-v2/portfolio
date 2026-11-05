@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { navSections, sections } from "@/content/navigation";
 import { profile } from "@/content/profile";
+import { CV_FILE_NAME, CV_PDF_PATH } from "@/lib/cv/file";
 import { openCommandPalette } from "./CommandPalette";
 import { Button } from "./ui/Button";
 
@@ -80,6 +81,10 @@ export function Nav() {
         </ul>
 
         <div className="flex items-center gap-2">
+          <Button size="sm" variant="primary" href={CV_PDF_PATH} download={CV_FILE_NAME}>
+            CV
+            <span className="sr-only">: download as PDF</span>
+          </Button>
           <Button size="sm" onClick={openCommandPalette} className="max-sm:hidden!">
             Jump to
             <kbd className="rounded-[3px] bg-ink px-1.5 text-data font-bold text-tape-text">⌘K</kbd>
@@ -123,7 +128,16 @@ export function Nav() {
             ))}
           </ul>
           <Button
+            variant="primary"
             className="mt-5 w-full"
+            href={CV_PDF_PATH}
+            download={CV_FILE_NAME}
+            onClick={() => setOpen(false)}
+          >
+            Download CV (PDF)
+          </Button>
+          <Button
+            className="mt-3 w-full"
             onClick={() => {
               setOpen(false);
               openCommandPalette();

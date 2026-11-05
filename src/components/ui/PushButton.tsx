@@ -4,16 +4,20 @@ import type { ReactNode } from "react";
 export function PushButton({
   href,
   external = false,
+  download,
   children,
 }: {
   href: string;
   /** Opens in a new tab. */
   external?: boolean;
+  /** Saves the target under this file name instead of opening it. */
+  download?: string;
   children: ReactNode;
 }) {
   return (
     <a
       href={href}
+      download={download}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
       className="group inline-flex items-center gap-4"
     >

@@ -9,7 +9,7 @@ import { Tape } from "./ui/Tape";
 
 export function CaseStudy() {
   return (
-    <Section id="case-study" title={caseStudy.name} tilt={1.2} intro={caseStudy.summary}>
+    <Section id="case-study" title={caseStudy.name} subtitle="Case study" tilt={1.2} intro={caseStudy.summary}>
       <p className="-mt-4 mb-10 max-w-[60ch] text-small font-semibold text-ink-2">
         Technical lead and primary backend author, {caseStudy.period.replace(" – ", " to ")}. The code is private;
         I&apos;m happy to walk you through it.

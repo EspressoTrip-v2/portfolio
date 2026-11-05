@@ -1,7 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { cacheLife } from "next/cache";
 import { ImageResponse } from "next/og";
-import { experience, profile } from "@/content/profile";
+import { profile } from "@/content/profile";
 
 export const alt = `${profile.name}, ${profile.title}`;
 export const size = { width: 1200, height: 630 };
@@ -9,15 +10,22 @@ export const contentType = "image/png";
 
 const fontDir = join(process.cwd(), "node_modules/@fontsource/archivo/files");
 
-// Read lazily: link-preview bots get a request-time render that imports this module for its
-// metadata exports, so a top-level read would run (and fail) outside the image route.
-let fonts: Promise<[Buffer, Buffer]> | undefined;
-function loadFonts() {
-  fonts ??= Promise.all([
+// Read inside the render, not at the top level: link-preview bots get a request-time render that
+// imports this module for its metadata exports, so a top-level read would run (and fail) outside
+// the image route. Cached, because with cacheComponents uncached file reads make the image dynamic.
+async function loadFonts() {
+  "use cache";
+  cacheLife("max");
+  const [medium, heavy] = await Promise.all([
     readFile(join(fontDir, "archivo-latin-500-normal.woff")),
     readFile(join(fontDir, "archivo-latin-800-normal.woff")),
   ]);
-  return fonts;
+  // ArrayBuffers: serialisable for the cache, and accepted by ImageResponse's font option.
+  return [toArrayBuffer(medium), toArrayBuffer(heavy)] as const;
+}
+
+function toArrayBuffer(buffer: Buffer) {
+  return new Uint8Array(buffer).buffer;
 }
 
 // Tripped theme colours (see src/app/globals.css).
@@ -27,10 +35,8 @@ const ink2 = "#34383C";
 const tape = "#151515";
 const tapeText = "#F4F4F0";
 const panel = "#1C1D1F";
-const rail = "#8C9196";
+const marker = "#F2C230";
 const red = "#D8261C";
-
-const circuits = [...experience].reverse();
 
 function Tape({ text, tilt, size: fontSize }: { text: string; tilt: number; size: number }) {
   return (
@@ -81,51 +87,39 @@ export default async function OpenGraphImage() {
         </div>
       </div>
 
-      {/* Mini distribution board: the current role's breaker is on */}
-      <div style={{ display: "flex", background: panel, borderRadius: 10, padding: 16 }}>
-        <div style={{ display: "flex", flex: 1, gap: 10, background: rail, borderRadius: 4, padding: 10 }}>
-          {circuits.map((role) => {
-            const on = role.end === "Present";
-            return (
-              <div
-                key={`${role.company}-${role.start}`}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  flex: 1,
-                  background: "#EEEEEA",
-                  borderRadius: 5,
-                  padding: "10px 4px 8px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    width: 22,
-                    height: 40,
-                    background: "#2b2b2b",
-                    borderRadius: 3,
-                    padding: 3,
-                    alignItems: on ? "flex-start" : "flex-end",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      width: 16,
-                      height: 18,
-                      borderRadius: 2,
-                      background: on ? red : "#E7E7E2",
-                    }}
-                  />
-                </div>
-                <div style={{ display: "flex", marginTop: 6, fontSize: 16, fontWeight: 800 }}>
-                  {role.start.slice(-4)}
-                </div>
-              </div>
-            );
-          })}
+      {/* Stack as cable markers on a dark board, with how Juan works */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 24,
+          background: panel,
+          borderRadius: 10,
+          padding: "18px 22px",
+        }}
+      >
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+          {profile.stack.map((item) => (
+            <div
+              key={item}
+              style={{
+                display: "flex",
+                background: marker,
+                color: ink,
+                fontSize: 26,
+                fontWeight: 800,
+                padding: "6px 14px",
+                borderRadius: 4,
+              }}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "flex", flexShrink: 0, alignItems: "center", gap: 10, color: tapeText, fontSize: 26 }}>
+          <div style={{ display: "flex", width: 14, height: 14, borderRadius: 7, background: red }} />
+          {profile.workMode}
         </div>
       </div>
     </div>,

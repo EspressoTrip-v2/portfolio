@@ -1,13 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/Button";
+import { CV_FILE_NAME } from "@/lib/cv/file";
 import { type CvChanges as Changes, type CvEvent, cvLimits, type TailoredCv, tidySpec } from "@/lib/cv/schema";
 import { CvChanges } from "./CvChanges";
 import { CvProgress, type ProgressStage } from "./CvProgress";
-import { CV_FILE_NAME, renderCvPdf } from "./renderCv";
+import { renderCvPdf } from "./renderCv";
 
 type Pdf = { url: string; fileName: string };
+
+/** The passcode is remembered on Juan's own device only. Storage can be unavailable, so every access is guarded. */
+const PASSCODE_KEY = "cv-passcode";
+
+function loadPasscode() {
+  try {
+    return localStorage.getItem(PASSCODE_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+/** Other tabs saving or forgetting the passcode. */
+function onPasscodeChange(update: () => void) {
+  window.addEventListener("storage", update);
+  return () => window.removeEventListener("storage", update);
+}
+
+function savePasscode(value: string) {
+  try {
+    if (value) localStorage.setItem(PASSCODE_KEY, value);
+    else localStorage.removeItem(PASSCODE_KEY);
+  } catch {
+    // Not remembered; it still works for this visit.
+  }
+}
 
 /** Reads the API's newline-delimited events as they arrive. */
 async function* readEvents(response: Response) {
@@ -26,6 +53,10 @@ async function* readEvents(response: Response) {
 /** Paste a job spec, get Juan's CV for the role. The PDF shown is the PDF that downloads. */
 export function CvGenerator({ standard }: { standard: TailoredCv }) {
   const [spec, setSpec] = useState("");
+  // The server render has no storage, so it starts empty and the client fills in the remembered value.
+  const remembered = useSyncExternalStore(onPasscodeChange, loadPasscode, () => "");
+  const [typed, setPasscode] = useState<string>();
+  const passcode = typed ?? remembered;
   const [cv, setCv] = useState(standard);
   const [changes, setChanges] = useState<Changes>();
   const [stage, setStage] = useState<ProgressStage>();
@@ -67,14 +98,19 @@ export function CvGenerator({ standard }: { standard: TailoredCv }) {
     try {
       const response = await fetch("/api/cv", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(passcode ? { Authorization: `Bearer ${passcode}` } : {}),
+        },
         body: JSON.stringify({ jobSpec: spec }),
       });
       if (!response.ok) {
+        if (response.status === 401) savePasscode("");
         const body = await response.json().catch(() => ({}));
         setError(body.error ?? "Something went wrong. Try again.");
         return setStage(undefined);
       }
+      savePasscode(passcode);
       for await (const item of readEvents(response)) {
         if (item.type === "stage") setStage(item.stage);
         if (item.type === "error") {
@@ -99,6 +135,33 @@ export function CvGenerator({ standard }: { standard: TailoredCv }) {
   return (
     <div className="mt-10 space-y-8">
       <form onSubmit={create} className="space-y-3">
+        <div className="flex flex-wrap items-end gap-3">
+          <div>
+            <label htmlFor="cv-passcode" className="block font-bold">
+              Passcode
+            </label>
+            <input
+              id="cv-passcode"
+              type="password"
+              autoComplete="current-password"
+              value={passcode}
+              onChange={(event) => setPasscode(event.target.value)}
+              className="mt-1 w-72 max-w-full rounded-[4px] border border-ink-3 bg-chart px-3 py-2 text-small text-ink"
+            />
+          </div>
+          {passcode && (
+            <Button
+              variant="quiet"
+              size="sm"
+              onClick={() => {
+                savePasscode("");
+                setPasscode("");
+              }}
+            >
+              Forget passcode
+            </Button>
+          )}
+        </div>
         <label htmlFor="job-spec" className="block font-bold">
           Job spec
         </label>

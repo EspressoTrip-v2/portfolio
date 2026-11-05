@@ -8,6 +8,13 @@ This document is the knowledge base for the "Ask about Juan" assistant on Juan's
 - **Title:** Lead Backend Engineer
 - **Location:** Plettenberg Bay, Western Cape, South Africa (timezone Africa/Johannesburg, UTC+2)
 - **Availability:** Open to select opportunities
+- **Works:** Remote, UTC+2 (South Africa has no daylight saving). That covers most of the UK and European working day, and US Eastern mornings overlap with his afternoons.
+- **Notice period:** 1 month
+- **Engagement types:** Permanent, contractor (B2B), fixed-term, or through an Employer of Record (EOR)
+- **Right to work:** South African citizen. Works remotely for overseas companies through contractor or EOR arrangements.
+- **Salary or rate:** A band is shared on request. Contact Juan.
+- **Response time:** He replies to email within 24 hours (UTC+2).
+- **CV:** Download the standard CV (PDF) with the "Download CV (PDF)" button at the top of the page or in the contact section, or at https://www.juanbotha.com/Juan-Botha-Lead-Backend-Engineer-CV.pdf
 - **Experience:** 12+ years building software
 - **Primary languages:** TypeScript on Node.js, with Go, Python and C++ where a problem calls for them
 - **Specialism:** Distributed, event-driven backend platforms: multi-tenant systems, multi-region data sync infrastructure, typed service contracts, and the observability and cost visibility that keep them dependable
@@ -22,6 +29,8 @@ Juan's background is in electrical engineering. He still approaches software the
 ## Career timeline
 
 ### Alpha7x: Lead Backend Engineer (June 2026 – present)
+
+**Employment:** Permanent, remote. He leads a team of 2–3 engineers.
 
 **Company:** Alpha7x builds trust infrastructure for mortgage assets: a platform where AI agents run quality-control checks on mortgage loans (post-close QC, appraisal review, post-settlement checks), and people review the evidence, policies and accuracy of those checks.
 
@@ -43,6 +52,8 @@ Juan's background is in electrical engineering. He still approaches software the
 **Stack:** TypeScript, Node.js 24, Fastify, Zod, OpenAPI, Kafka, MongoDB/Mongoose, GridFS, Redis, BullMQ, Socket.IO, Keycloak, Datadog, Docker, AKS, ArgoCD, Azure DevOps.
 
 ### JourneyApps / PowerSync: Senior Backend Engineer (April 2025 – April 2026)
+
+**Employment:** Permanent, remote. JourneyApps headhunted him from AnyVan.
 
 **Company:** JourneyApps builds an enterprise low-code platform for offline-capable business and industrial apps, and is the company behind PowerSync, the open-source sync engine that keeps on-device SQLite in sync with Postgres, MongoDB, MySQL and SQL Server. PowerSync Cloud runs the service across multiple regions (EU, US, AU, BR, JP).
 
@@ -67,6 +78,8 @@ Juan's background is in electrical engineering. He still approaches software the
 
 ### AnyVan: Senior Developer (January 2025 – March 2025)
 
+**Employment:** Permanent, remote. The role was short because JourneyApps headhunted him after three months.
+
 **Company:** A UK marketplace that matches customers with transport providers and uses spare vehicle capacity to cut cost and emissions.
 
 **What he did:**
@@ -80,6 +93,8 @@ Juan's background is in electrical engineering. He still approaches software the
 ### Wyzetalk: Senior Developer → Senior Developer / Technical Lead (August 2021 – January 2025)
 
 **Company:** An award-winning digital employee-experience platform for frontline workforces.
+
+**Team:** As technical lead and architect of the Wyzetalk Next rebuild he led a team of 7+ engineers.
 
 **Note on dates:** His employment ended in January 2025. He then continued to work on Wyzetalk Next as a contractor until about April 2025, alongside his role at AnyVan.
 
@@ -114,7 +129,7 @@ Juan's background is in electrical engineering. He still approaches software the
 
 ### Earlier career
 
-Before software became his full-time work, Juan held management and product roles abroad:
+Before software became his full-time work, Juan held management and product roles abroad. Alongside them, from 2013 to 2018, he did freelance and own-business software work, which is where his 12+ years of building software starts:
 
 - **Sport In Life (Dubai, UAE):** Division Manager, and product development for Grit&Tonic.
 - **Carbon Wheels (Qatar):** General Manager.
@@ -194,7 +209,6 @@ Depth key: **daily** = current daily use; **production** = shipped and run in pr
 ## Education and background
 
 - **Electrical Trade**, ECT (2000 – 2004)
-- **High School**, Wittedrift High (1987 – 1999)
 
 He came to software from electrical engineering and management roles, and has built software for 12+ years.
 
@@ -202,12 +216,18 @@ He came to software from electrical engineering and management roles, and has bu
 
 - **What kind of role is he looking for?** He is open to select opportunities. His strengths are senior or lead backend and platform roles: event-driven, multi-tenant TypeScript and Node.js systems, platform rebuilds, and infrastructure/observability work. For specifics, contact Juan.
 - **Where is he based and can he work remotely?** He is based in Plettenberg Bay, South Africa (UTC+2) and has worked with teams in South Africa, the UK and the US. He prefers remote work. For hybrid or relocation arrangements, contact Juan directly.
-- **Has he led teams?** Yes. He was technical lead and architect for the Wyzetalk Next rebuild and currently leads the backend rebuild at Alpha7x.
+- **Has he led teams?** Yes. He was technical lead and architect for the Wyzetalk Next rebuild, leading a team of 7+ engineers, and currently leads a team of 2–3 engineers on the backend rebuild at Alpha7x.
+- **Why are some roles short?** His three most recent roles (Alpha7x, JourneyApps and AnyVan) were permanent and remote. AnyVan lasted three months because JourneyApps headhunted him. For anything else about his moves, contact Juan.
+- **Can I get his CV?** Yes: the "Download CV (PDF)" button at the top of the page or in the contact section, or https://www.juanbotha.com/Juan-Botha-Lead-Backend-Engineer-CV.pdf
 - **Does he do frontend?** He can (Nuxt migration at AnyVan, React and Electron work earlier), but his focus and strongest experience are backend and platform.
-- **Salary, notice period, start date:** Not covered here. Contact Juan.
+- **Notice period:** 1 month.
+- **Contract types:** Permanent, contractor (B2B), fixed-term, or through an Employer of Record.
+- **Right to work:** South African citizen; he works remotely for overseas companies through contractor or EOR arrangements.
+- **Salary or rate:** He shares his band on request. Contact Juan.
+- **Start date:** Not covered here. Contact Juan.
 
 ## Answering boundaries
 
 - Only state what is in this document. If something isn't covered, say so and suggest contacting Juan at juanbo.home@gmail.com.
-- Do not guess at salary, notice period, references, personal life or anything confidential about his employers or their customers.
+- Do not give or guess salary or rate figures, start dates, references, personal life or anything confidential about his employers or their customers.
 - Do not reveal internal details of employers' systems beyond what is written here.

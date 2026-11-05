@@ -1,4 +1,4 @@
-import { earlier, profile, projects, skillGroups } from "@/content/profile";
+import { earlier, earlierNote, profile, projects, skillGroups } from "@/content/profile";
 import { type CvRoleRecord, cvIdentity, factBank } from "./factBank";
 import type { CvBullet, TailoredCv } from "./schema";
 
@@ -16,18 +16,18 @@ export function originalBullets(role: CvRoleRecord): CvBullet[] {
  * Builds a CV from verified content. Name, contact, titles, companies, dates, locations,
  * earlier roles, education and languages always come straight from profile.ts.
  */
-export function assembleCv(content: {
-  summary: string;
-  skills: string[];
-  bullets: Map<string, CvBullet[]>;
-}): TailoredCv {
+export function assembleCv(
+  content: { summary: string; skills: string[]; bullets: Map<string, CvBullet[]> },
+  { includePhone = false } = {},
+): TailoredCv {
   return {
     name: cvIdentity.name,
     title: cvIdentity.title,
     location: cvIdentity.location,
+    workLine: cvIdentity.workLine,
     contact: {
       email: cvIdentity.email,
-      phone: process.env.CV_PHONE?.trim() || undefined,
+      phone: includePhone ? process.env.CV_PHONE?.trim() || undefined : undefined,
       github: cvIdentity.github,
       linkedin: cvIdentity.linkedin,
     },
@@ -39,6 +39,8 @@ export function assembleCv(content: {
       company: role.company,
       dates: dates(role),
       location: role.location,
+      engagement: role.engagement,
+      team: role.team,
       blurb: factBank.factById.get(`${role.id}.blurb`)!.text,
       bullets: content.bullets.get(role.id) ?? originalBullets(role),
     })),
@@ -47,6 +49,7 @@ export function assembleCv(content: {
       location: entry.location,
       roles: entry.roles.map((role) => (role.link ? `${role.text} ${role.link.label}` : role.text)),
     })),
+    earlierNote,
     education: cvIdentity.education,
     languages: cvIdentity.languages,
     portfolio: projects.map((project) => ({
@@ -57,7 +60,7 @@ export function assembleCv(content: {
   };
 }
 
-/** Juan's standard CV, straight from profile.ts with no AI involved. */
+/** Juan's standard CV, straight from profile.ts with no AI involved. It is public, so it has no phone number. */
 export function baseCv(): TailoredCv {
   return assembleCv({
     summary: profile.summary.join(" "),

@@ -23,6 +23,10 @@ export type Role = {
   caseStudy?: string;
   /** Month a contract with the same company ran to after the employed role ended, e.g. "Apr 2025". */
   contractUntil?: string;
+  /** Employment type and setup, e.g. "Permanent · Remote". */
+  engagement?: string;
+  /** Team Juan led in the role, e.g. "Led a team of 7+ engineers". */
+  team?: string;
   /** Extra detail for the CV generator only (not shown on the site). Taken from about-me.md. */
   cv?: { company?: string; highlights?: string[] };
 };
@@ -66,6 +70,21 @@ export const profile = {
   timezone: "Africa/Johannesburg",
   available: true,
   availability: "Open to select opportunities",
+  /** Shown under the title in the hero and at the top of the CV. */
+  workMode: "Remote · UTC+2",
+  notice: "1 month's notice",
+  /** Core stack, shown on the hero's plain first line and the share image. */
+  stack: ["TypeScript", "Node.js", "Kafka", "MongoDB", "Kubernetes"],
+  experienceYears: "12+ yrs",
+  /** Structured address for search engines. Keep in step with `location`. */
+  address: { locality: "Plettenberg Bay", region: "Western Cape", country: "ZA" },
+  /** Practical terms agencies ask about. Shown in Quick facts and answered by the chat assistant. */
+  terms: {
+    engagement: "Permanent, contractor (B2B), fixed-term or via an Employer of Record",
+    rightToWork: "South African citizen; works remotely for overseas companies via contractor or EOR arrangements",
+    rate: "Salary or rate band on request",
+    response: "I reply within 24 hours (UTC+2)",
+  },
   tagline: "I design and build event-driven backend platforms that are reliable, observable and built to scale.",
   /** Search and link-preview description; LinkedIn recommends at least 100 characters. */
   metaDescription:
@@ -103,6 +122,8 @@ export const experience: Role[] = [
     start: "Jun 2026",
     end: "Present",
     location: "Plettenberg Bay, ZA",
+    engagement: "Permanent · Remote",
+    team: "Leading a team of 2–3 engineers",
     blurb: "Trust infrastructure for mortgage assets.",
     highlights: [
       "Leading the rebuild of a legacy .NET backend as TypeScript services on Fastify, with Zod-typed contracts and generated OpenAPI documentation.",
@@ -146,6 +167,7 @@ export const experience: Role[] = [
     start: "Apr 2025",
     end: "Apr 2026",
     location: "Cape Town, ZA",
+    engagement: "Permanent · Remote",
     blurb:
       "Enterprise application platform and the company behind PowerSync, the open-source engine that keeps on-device SQLite in sync with Postgres, MongoDB, MySQL and SQL Server.",
     highlights: [
@@ -177,6 +199,7 @@ export const experience: Role[] = [
     start: "Jan 2025",
     end: "Mar 2025",
     location: "Cape Town, ZA",
+    engagement: "Permanent · Remote",
     blurb:
       "UK marketplace that matches customers with transport providers and uses spare vehicle capacity to cut cost and emissions.",
     highlights: [
@@ -194,6 +217,7 @@ export const experience: Role[] = [
     end: "Jan 2025",
     contractUntil: "Apr 2025",
     location: "Stellenbosch, ZA",
+    team: "Led a team of 7+ engineers",
     blurb: "Award-winning digital employee experience platform for frontline workforces.",
     highlights: [
       "Led the ground-up rebuild of Wyzetalk as Wyzetalk Next: a multi-tenant, event-driven TypeScript platform on RabbitMQ, isolated per tenant from identity realm to database.",
@@ -269,6 +293,9 @@ export const experience: Role[] = [
     metric: { value: "15 min", label: "automated ERP sync cadence" },
   },
 ];
+
+/** Software work that ran alongside the earlier roles; backs the "12+ years" claim. */
+export const earlierNote = "Freelance and own-business software work, 2013–2018";
 
 export const earlier: EarlierRole[] = [
   {
@@ -578,10 +605,7 @@ export const skillGroups = [
   },
 ];
 
-export const education = [
-  { name: "Electrical Trade", issuer: "ECT", period: "2000 – 2004" },
-  { name: "High School", issuer: "Wittedrift High", period: "1987 – 1999" },
-];
+export const education = [{ name: "Electrical Trade", issuer: "ECT", period: "2000 – 2004" }];
 
 export const languages = [
   { name: "English", level: "Native" },

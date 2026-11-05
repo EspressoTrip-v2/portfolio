@@ -6,6 +6,7 @@ import { openChat } from "@/components/chat/ChatWidget";
 import { Screws } from "@/components/ui/Enclosure";
 import { sections } from "@/content/navigation";
 import { profile, projects } from "@/content/profile";
+import { CV_FILE_NAME, CV_PDF_PATH } from "@/lib/cv/file";
 
 const OPEN_EVENT = "command-palette:open";
 
@@ -63,6 +64,18 @@ export function CommandPalette() {
         label: "Ask about Juan",
         hint: "Chat assistant",
         run: openChat,
+      },
+      {
+        id: "download-cv",
+        group: "Actions",
+        label: "Download CV",
+        hint: "PDF",
+        run: () => {
+          const link = document.createElement("a");
+          link.href = CV_PDF_PATH;
+          link.download = CV_FILE_NAME;
+          link.click();
+        },
       },
       {
         id: "copy-email",
