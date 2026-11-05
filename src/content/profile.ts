@@ -67,6 +67,9 @@ export const profile = {
   available: true,
   availability: "Open to select opportunities",
   tagline: "I design and build event-driven backend platforms that are reliable, observable and built to scale.",
+  /** Search and link-preview description; LinkedIn recommends at least 100 characters. */
+  metaDescription:
+    "Lead Backend Engineer in South Africa. I design and build event-driven TypeScript and Node.js platforms that are reliable, observable and built to scale.",
   /** Hero line, in the voice of the electrical trade Juan came from. */
   lede: "I design event-driven backend platforms the way I wired boards: know the load, plan for the fault, label every circuit.",
   summary: [

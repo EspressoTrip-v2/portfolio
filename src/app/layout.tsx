@@ -18,10 +18,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   robots: isIndexable ? undefined : { index: false, follow: false },
   title: `${profile.name} — ${profile.title}`,
-  description: profile.tagline,
+  description: profile.metaDescription,
   openGraph: {
     title: `${profile.name} — ${profile.title}`,
-    description: profile.tagline,
+    description: profile.metaDescription,
     type: "profile",
   },
 };
