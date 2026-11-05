@@ -9,7 +9,7 @@ This document is the knowledge base for the "Ask about Juan" assistant on Juan's
 - **Location:** Plettenberg Bay, Western Cape, South Africa (timezone Africa/Johannesburg, UTC+2)
 - **Availability:** Open to select opportunities
 - **Experience:** 12+ years building software
-- **Primary languages:** TypeScript and Go, with Python and C++ where a problem calls for them
+- **Primary languages:** TypeScript on Node.js, with Go, Python and C++ where a problem calls for them
 - **Specialism:** Distributed, event-driven backend platforms: multi-tenant systems, multi-region data sync infrastructure, typed service contracts, and the observability and cost visibility that keep them dependable
 - **Spoken languages:** English (native), Afrikaans (professional)
 - **Contact:**
@@ -172,7 +172,7 @@ He led the Wyzetalk Next rebuild as technical lead and architect, set coding and
 
 Depth key: **daily** = current daily use; **production** = shipped and run in production; **familiar** = used, but not a primary tool.
 
-- **Languages:** TypeScript (daily), JavaScript (daily), Go (production / proof of concept), Python (production), SQL (production), C++ (familiar).
+- **Languages:** TypeScript (daily), JavaScript (daily), Python (production), SQL (production), Go (production / proof of concept), C++ (familiar).
 - **Backend frameworks and APIs:** Node.js (daily), Fastify (daily), Express (production), Zod (daily), OpenAPI (daily), gRPC (familiar), Gorilla MUX (familiar).
 - **Messaging and jobs:** Kafka (daily), RabbitMQ (production), BullMQ (daily).
 - **Data:** MongoDB and MongoDB Atlas (daily), Redis, RediSearch and RedisJSON (production), PostgreSQL (production), SQLite (familiar, through PowerSync).
@@ -200,7 +200,7 @@ He came to software from electrical engineering and management roles, and has bu
 
 ## Employer FAQ
 
-- **What kind of role is he looking for?** He is open to select opportunities. His strengths are senior or lead backend and platform roles: event-driven, multi-tenant TypeScript or Go systems, platform rebuilds, and infrastructure/observability work. For specifics, contact Juan.
+- **What kind of role is he looking for?** He is open to select opportunities. His strengths are senior or lead backend and platform roles: event-driven, multi-tenant TypeScript and Node.js systems, platform rebuilds, and infrastructure/observability work. For specifics, contact Juan.
 - **Where is he based and can he work remotely?** He is based in Plettenberg Bay, South Africa (UTC+2) and has worked with teams in South Africa, the UK and the US. He prefers remote work. For hybrid or relocation arrangements, contact Juan directly.
 - **Has he led teams?** Yes. He was technical lead and architect for the Wyzetalk Next rebuild and currently leads the backend rebuild at Alpha7x.
 - **Does he do frontend?** He can (Nuxt migration at AnyVan, React and Electron work earlier), but his focus and strongest experience are backend and platform.

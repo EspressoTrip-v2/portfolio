@@ -71,7 +71,7 @@ export const profile = {
   lede: "I design event-driven backend platforms the way I wired boards: know the load, plan for the fault, label every circuit.",
   summary: [
     "Backend engineer with 12+ years of experience building software. My background is in electrical engineering, and I still approach systems the same way: understand the load, design for failure and document every circuit.",
-    "I work primarily in TypeScript and Go, with Python and C++ where a problem calls for them. I specialise in distributed, event-driven architecture: multi-tenant platforms, multi-region data sync infrastructure, typed service contracts, and the observability and cost visibility that keep them dependable. I have led ground-up platform rebuilds and supported large multi-region production estates. I currently lead a TypeScript platform rebuild at Alpha7x.",
+    "I work primarily in TypeScript on Node.js, with Go, Python and C++ where a problem calls for them. I specialise in distributed, event-driven architecture: multi-tenant platforms, multi-region data sync infrastructure, typed service contracts, and the observability and cost visibility that keep them dependable. I have led ground-up platform rebuilds and supported large multi-region production estates. I currently lead a TypeScript platform rebuild at Alpha7x.",
   ],
   links: {
     email: {
@@ -523,7 +523,7 @@ export const principles = [
 export const skillGroups = [
   {
     title: "Languages",
-    items: ["TypeScript", "JavaScript", "Go", "Python", "C++", "SQL"],
+    items: ["TypeScript", "JavaScript", "Python", "SQL", "Go", "C++"],
   },
   {
     title: "Backend & Messaging",
