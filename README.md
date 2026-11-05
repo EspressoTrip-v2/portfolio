@@ -97,7 +97,7 @@ Without Upstash variables the rate limiter is skipped locally, and in production
 
 **CV generator (Juan only).** `/cv` lets Juan paste a job spec and get his CV for the role, worded so it passes automated (ATS and AI) CV screening: the spec's exact keywords appear wherever his record supports them. The page only ever says "Get CV"; nothing on it, in the PDF or in the file name (`Juan-Botha-Lead-Backend-Engineer-CV.pdf`) says the CV was prepared for the spec. It is not linked from the site and is marked `noindex`; `robots.txt` doesn't list it, so its path isn't advertised.
 
-- **Gate** (`src/lib/cv/enabled.ts`): on in `next dev`. In a production build, including Vercel previews, the page and `POST /api/cv` return 404 unless `CV_GENERATOR=on` **and** `CV_ACCESS_KEY` are set.
+- **Gate** (`src/lib/cv/enabled.ts`): on in `next dev`. In a production build, including Vercel previews, the page and `POST /api/cv` return 404 unless `CV_ACCESS_KEY` is set. The page is prerendered, so set the key before the deploy that should turn it on.
 - **Passcode** (`src/lib/cv/access.ts`): the API requires `Authorization: Bearer <CV_ACCESS_KEY>`, compared in constant time, and returns 401 otherwise. The check runs before the rate limit, so wrong guesses can't use up the shared daily cap; the key is long and random, so guessing isn't feasible. The `/cv` page has a passcode field and remembers the passcode in the browser's local storage. In `next dev` with no key set, no passcode is needed.
 
 Run `pnpm dev` and open `http://localhost:3030/cv`.
@@ -117,8 +117,7 @@ Run `pnpm dev` and open `http://localhost:3030/cv`.
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `CV_MODEL`      | Optional. Model that writes the CV. Defaults to `claude-opus-5-5`; Haiku plays it safe and adds far fewer keywords.                                                                                |
 | `CV_EFFORT`     | Optional. Effort for `CV_MODEL` (`low` to `max`). Defaults to `high`.                                                                                                                              |
-| `CV_GENERATOR`  | Optional. `on` enables the generator in a production build; it also needs `CV_ACCESS_KEY`.                                                                                                         |
-| `CV_ACCESS_KEY` | Passcode for the generator in production: a long random string, e.g. `openssl rand -base64 32`. Set in Vercel only.                                                                                |
+| `CV_ACCESS_KEY` | Passcode for the generator; setting it turns the generator on in production: a long random string, e.g. `openssl rand -base64 32`. Set it in Vercel Production, and in `.env` to use it locally.   |
 | `CV_PHONE`      | Optional. Phone number printed on the CV. Kept out of the repo; omitted when unset. Printed only on CVs returned by the passcode-protected API, never on the public standard CV or the `/cv` page. |
 
 **PDF** (`src/components/cv/CvDocument.tsx`): rendered in the browser with `@react-pdf/renderer` in the site's Tripped style, kept print-friendly: name and section headings on black label tape, contact details on a riveted rating plate, skills as yellow cable markers, each role numbered as a circuit (the current one red), A4, Archivo (`public/fonts/cv/`, SIL Open Font License), real selectable text. **The page shows the same PDF blob that "Download CV" saves**, so the preview and the download always match. Before a CV is created for a spec, both are the general CV built from `profile.ts`.
