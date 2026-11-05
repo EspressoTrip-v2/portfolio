@@ -21,9 +21,12 @@ const nextConfig: NextConfig = {
   },
   // Hide the dev-only Next.js badge; it sat on top of the page in the bottom-left corner.
   devIndicators: false,
-  // The chat route reads the knowledge document from disk at runtime.
+  // Routes that read files from disk at runtime: the chat route reads the knowledge document,
+  // and the social images read their Archivo fonts.
   outputFileTracingIncludes: {
     "/api/chat": ["./src/content/about-me.md"],
+    "/opengraph-image": ["./node_modules/@fontsource/archivo/files/archivo-latin-{500,800}-normal.woff"],
+    "/twitter-image": ["./node_modules/@fontsource/archivo/files/archivo-latin-{500,800}-normal.woff"],
   },
   turbopack: {
     rules: {

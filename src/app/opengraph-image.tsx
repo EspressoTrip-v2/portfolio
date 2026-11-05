@@ -8,10 +8,17 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const fontDir = join(process.cwd(), "node_modules/@fontsource/archivo/files");
-const [medium, heavy] = await Promise.all([
-  readFile(join(fontDir, "archivo-latin-500-normal.woff")),
-  readFile(join(fontDir, "archivo-latin-800-normal.woff")),
-]);
+
+// Read lazily: link-preview bots get a request-time render that imports this module for its
+// metadata exports, so a top-level read would run (and fail) outside the image route.
+let fonts: Promise<[Buffer, Buffer]> | undefined;
+function loadFonts() {
+  fonts ??= Promise.all([
+    readFile(join(fontDir, "archivo-latin-500-normal.woff")),
+    readFile(join(fontDir, "archivo-latin-800-normal.woff")),
+  ]);
+  return fonts;
+}
 
 // Tripped theme colours (see src/app/globals.css).
 const steel = "#C3C7CA";
@@ -46,7 +53,8 @@ function Tape({ text, tilt, size: fontSize }: { text: string; tilt: number; size
   );
 }
 
-export default function OpenGraphImage() {
+export default async function OpenGraphImage() {
+  const [medium, heavy] = await loadFonts();
   return new ImageResponse(
     <div
       style={{
